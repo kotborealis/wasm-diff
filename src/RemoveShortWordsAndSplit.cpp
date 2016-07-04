@@ -4,7 +4,7 @@
 #include <iostream>
 using namespace std;
 vector<wstring> RemoveShortWordsAndSplit(wstring str, int len){
-	wstring symbols = L",:;()<>\" \'!@#$^&`*+=-/\\?.~";
+	wstring symbols = L",:;()[]{}<>\" \'!@#$^&`*+=-/\\?.~";
 	vector<wstring> v;
 	v.push_back(L"");
 

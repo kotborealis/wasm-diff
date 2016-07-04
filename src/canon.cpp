@@ -1,10 +1,6 @@
 ﻿#include "canon.h"
 
-#include <cctype>
 #include <string>
-#include <algorithm>
-
-using namespace std;
 
 /**
  * Принимает встринг

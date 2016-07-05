@@ -15,9 +15,15 @@ int main(int argc, char** argv){
         if((*it)->type==DIFF_EQUAL)
             std::wcout<<(*it)->text;
         else if((*it)->type==DIFF_REMOVE)
-            std::wcout<<L'-'<<(*it)->text;
+            if((*it)->text!=L"\n" && (*it)->text!=L" ")
+                std::wcout<<L'-'<<(*it)->text;
+            else
+                std::wcout<<(*it)->text;
         else if((*it)->type==DIFF_INSERT)
-            std::wcout<<L'+'<<(*it)->text;
+            if((*it)->text!=L"\n" && (*it)->text!=L" ")
+                std::wcout<<L'+'<<(*it)->text;
+            else
+                std::wcout<<(*it)->text;
     }
     return 0;
 }

@@ -1,8 +1,11 @@
 #include "diff.h"
 #include <algorithm>
-#include <iostream>
 
-
+/**
+ * Обёртка над главной функцией для удобного вызова
+ * принимает две строки, внтури сплитает их на слова
+ * И вызывает на них диффМейн
+ */
 std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring text2){
     std::vector<std::wstring> words1 = splitString(text1);
     std::vector<std::wstring> words2 = splitString(text2);
@@ -10,6 +13,11 @@ std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring 
     return diffMain(words1, words2);
 }
 
+/**
+ * Главная функция
+ * Принимает два массива слов
+ * Возвращает массив из ДИФФ_ИНФО
+ */
 std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
     std::vector<DIFF_INFO*> diff;
 
@@ -45,6 +53,10 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<s
     return diff;
 }
 
+/**
+ * Проверяет пару простейших случаев
+ * и вызывает диффБиссект
+ */
 std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
     std::vector<DIFF_INFO*> diff;
 
@@ -68,6 +80,9 @@ std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vecto
  * http://code.google.com/p/google-diff-match-patch/
  * Привет копипаст
  * Скопированая и переделанная под дифф по словам функция из ссылок сверху
+ *
+ * Функция находит общую часть в середине двух массивов слов и делает дифф
+ * по словам до и после этой части
  */
 std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> text1, std::vector<std::wstring> text2){
     const int text1_length = text1.size();
@@ -181,16 +196,13 @@ std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> text1, std::vector<
     return diff;
 }
 
+/**
+ * Часть функции diffBissect
+ * Принимает два массива слов и координаты общей части в них
+ * Распилывает эти массивы по две части
+ * И пускает их в диффМейн, рекурсия, жа.
+ */
 std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::vector<std::wstring> text2, int x, int y){
-  /*QString text1a = text1.left(x);
-  QString text2a = text2.left(y);
-  QString text1b = safeMid(text1, x);
-  QString text2b = safeMid(text2, y);
-
-  // Compute both diffs serially.
-  QList<Diff> diffs = diff_main(text1a, text2a, false, deadline);
-  QList<Diff> diffsb = diff_main(text1b, text2b, false, deadline);*/
-
     std::vector<std::wstring> text1a = std::vector<std::wstring>(text1.begin(),text1.begin()+x);
     std::vector<std::wstring> text2a = std::vector<std::wstring>(text2.begin(),text2.begin()+y);
 
@@ -214,7 +226,8 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::ve
 }
 
 /**
- * Сплитает строку на слова, сохраняя разделители
+ * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
+ * FIXME: айдунно лол, но похоже после каждого слова оказываются переводы строк
  */
 std::vector<std::wstring> splitString(const std::wstring str){
     std::vector<std::wstring> tokens;
@@ -228,7 +241,7 @@ std::vector<std::wstring> splitString(const std::wstring str){
 }
 
 /**
- * Находит общий префикс в двух массивах
+ * Находит размер общего префикса в словах
  */
 int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
     int n = std::min(words1.size(), words2.size());
@@ -240,7 +253,7 @@ int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring
 }
 
 /**
- * находит общий суффикс в двух строках
+ * Находит размер общего суффикса в словах
  */
 int diff_commonSuffix(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
     int words1_len = words1.size();

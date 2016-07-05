@@ -17,7 +17,10 @@ public:
 };
 
 std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring text2);
+std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
 std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
+std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
+std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::vector<std::wstring> text2, int x, int y);
 std::vector<std::wstring> splitString(const std::wstring str);
 int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
 int diff_commonSuffix(std::vector<std::wstring> words1, std::vector<std::wstring> words2);

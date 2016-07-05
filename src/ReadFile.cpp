@@ -6,6 +6,8 @@
 
 std::wstring ReadFileToWString(std::string filename){
     std::wifstream stream(filename.c_str());
+    if(!stream)
+        std::wcout<<L"ты чо даун\n";
     stream.imbue(std::locale(""));
 
     std::wstring str;

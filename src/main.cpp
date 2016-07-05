@@ -1,12 +1,14 @@
 #include <iostream>
 #include "diff.h"
+#include "ReadFile.h"
 #include <vector>
 #include <string>
+
 using namespace std;
 int main(int argc, char** argv){
     setlocale(LC_ALL, "");
-    wstring o = L"1 vyf! 2 3 4 5 6 7";
-    wstring n = L"1 2 3 4 5 6 7";
+    wstring o = ReadFileToWString("./tests/test1a");
+    wstring n = ReadFileToWString("./tests/test1b");
     std::vector<DIFF_INFO*> diff = diffString(o,n);
 
     for(auto it = diff.begin();it!=diff.end();it++){

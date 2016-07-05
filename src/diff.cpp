@@ -6,9 +6,9 @@
  * принимает две строки, внтури сплитает их на слова
  * И вызывает на них диффМейн
  */
-std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring text2){
-    std::vector<std::wstring> words1 = splitString(text1);
-    std::vector<std::wstring> words2 = splitString(text2);
+std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2){
+    std::vector<std::string> words1 = splitString(text1);
+    std::vector<std::string> words2 = splitString(text2);
 
     return diffMain(words1, words2);
 }
@@ -18,7 +18,7 @@ std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring 
  * Принимает два массива слов
  * Возвращает массив из ДИФФ_ИНФО
  */
-std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
+std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<std::string> words2){
     std::vector<DIFF_INFO*> diff;
 
     bool equal = words1.size() == words2.size();
@@ -31,13 +31,13 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<s
     }
 
     int common_len_prefix = diff_commonPrefix(words1, words2);
-    std::vector<std::wstring> common_prefix = std::vector<std::wstring>(words1.begin(),words1.begin()+common_len_prefix);
+    std::vector<std::string> common_prefix = std::vector<std::string>(words1.begin(),words1.begin()+common_len_prefix);
 
     int common_len_suffix = diff_commonSuffix(words1, words2);
-    std::vector<std::wstring> common_suffix = std::vector<std::wstring>(words1.end()-common_len_suffix,words1.end());
+    std::vector<std::string> common_suffix = std::vector<std::string>(words1.end()-common_len_suffix,words1.end());
 
-    std::vector<std::wstring> words1_chop = std::vector<std::wstring>(words1.begin()+common_len_prefix,words1.end()-common_len_suffix);
-    std::vector<std::wstring> words2_chop = std::vector<std::wstring>(words2.begin()+common_len_prefix,words2.end()-common_len_suffix);
+    std::vector<std::string> words1_chop = std::vector<std::string>(words1.begin()+common_len_prefix,words1.end()-common_len_suffix);
+    std::vector<std::string> words2_chop = std::vector<std::string>(words2.begin()+common_len_prefix,words2.end()-common_len_suffix);
 
     diff = diffCompute(words1_chop,words2_chop);
 
@@ -64,7 +64,7 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<s
  * Проверяет пару простейших случаев
  * и вызывает диффБиссект
  */
-std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
+std::vector<DIFF_INFO*> diffCompute(std::vector<std::string> words1, std::vector<std::string> words2){
     std::vector<DIFF_INFO*> diff;
 
     if(words1.size()==0){
@@ -91,7 +91,7 @@ std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vecto
  * Функция находит общую часть в середине двух массивов слов и делает дифф
  * по словам до и после этой части
  */
-std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> text1, std::vector<std::wstring> text2){
+std::vector<DIFF_INFO*> diffBisect(std::vector<std::string> text1, std::vector<std::string> text2){
     const int text1_length = text1.size();
     const int text2_length = text2.size();
     const int max_d = (text1_length + text2_length + 1) / 2;
@@ -209,21 +209,21 @@ std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> text1, std::vector<
  * Распилывает эти массивы по две части
  * И пускает их в диффМейн, рекурсия, жа.
  */
-std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::vector<std::wstring> text2, int x, int y){
-    std::vector<std::wstring> text1a = std::vector<std::wstring>(text1.begin(),text1.begin()+x);
-    std::vector<std::wstring> text2a = std::vector<std::wstring>(text2.begin(),text2.begin()+y);
+std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vector<std::string> text2, int x, int y){
+    std::vector<std::string> text1a = std::vector<std::string>(text1.begin(),text1.begin()+x);
+    std::vector<std::string> text2a = std::vector<std::string>(text2.begin(),text2.begin()+y);
 
-    std::vector<std::wstring> text1b;
+    std::vector<std::string> text1b;
     if(text1.size()==x)
-        text1b = std::vector<std::wstring>();
+        text1b = std::vector<std::string>();
     else
-        text1b = std::vector<std::wstring>(text1.begin()+x,text1.end());
+        text1b = std::vector<std::string>(text1.begin()+x,text1.end());
 
-    std::vector<std::wstring> text2b;
+    std::vector<std::string> text2b;
     if(text2.size()==x)
-        text2b = std::vector<std::wstring>();
+        text2b = std::vector<std::string>();
     else
-        text2b = std::vector<std::wstring>(text2.begin()+y,text2.end());
+        text2b = std::vector<std::string>(text2.begin()+y,text2.end());
 
     std::vector<DIFF_INFO*> diff_a = diffMain(text1a, text2a);
     std::vector<DIFF_INFO*> diff_b = diffMain(text1b, text2b);     
@@ -235,13 +235,13 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::ve
 /**
  * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
  */
-std::vector<std::wstring> splitString(const std::wstring str){
-    std::vector<std::wstring> tokens;
-    tokens.push_back(L"");
+std::vector<std::string> splitString(const std::string str){
+    std::vector<std::string> tokens;
+    tokens.push_back("");
     for(auto it = str.begin(); it != str.end(); it++){
         tokens[tokens.size()-1] = tokens[tokens.size()-1]+=*it;
-        if(*it == L' ' || *it == L'\n')
-            tokens.push_back(L"");
+        if(*it == ' ' || *it == '\n')
+            tokens.push_back("");
     }
     return tokens;
 }
@@ -249,7 +249,7 @@ std::vector<std::wstring> splitString(const std::wstring str){
 /**
  * Находит размер общего префикса в словах
  */
-int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
+int diff_commonPrefix(std::vector<std::string> words1, std::vector<std::string> words2){
     int n = std::min(words1.size(), words2.size());
 
     for(int i = 0; i < n; i++)
@@ -261,7 +261,7 @@ int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring
 /**
  * Находит размер общего суффикса в словах
  */
-int diff_commonSuffix(std::vector<std::wstring> words1, std::vector<std::wstring> words2){
+int diff_commonSuffix(std::vector<std::string> words1, std::vector<std::string> words2){
     int words1_len = words1.size();
     int words2_len = words2.size();
     int n = std::min(words1_len, words2_len);

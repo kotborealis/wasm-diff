@@ -8,19 +8,19 @@ enum DIFF_TYPE{
 
 class DIFF_INFO{
 public:
-    DIFF_INFO(std::wstring _text, DIFF_TYPE _type){
+    DIFF_INFO(std::string _text, DIFF_TYPE _type){
         text = _text;
         type = _type;
     };
-    std::wstring text;
+    std::string text;
     DIFF_TYPE type;
 };
 
-std::vector<DIFF_INFO*> diffString(const std::wstring text1, const std::wstring text2);
-std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
-std::vector<DIFF_INFO*> diffCompute(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
-std::vector<DIFF_INFO*> diffBisect(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
-std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::vector<std::wstring> text2, int x, int y);
-std::vector<std::wstring> splitString(const std::wstring str);
-int diff_commonPrefix(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
-int diff_commonSuffix(std::vector<std::wstring> words1, std::vector<std::wstring> words2);
+std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2);
+std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<std::string> words2);
+std::vector<DIFF_INFO*> diffCompute(std::vector<std::string> words1, std::vector<std::string> words2);
+std::vector<DIFF_INFO*> diffBisect(std::vector<std::string> words1, std::vector<std::string> words2);
+std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vector<std::string> text2, int x, int y);
+std::vector<std::string> splitString(const std::string str);
+int diff_commonPrefix(std::vector<std::string> words1, std::vector<std::string> words2);
+int diff_commonSuffix(std::vector<std::string> words1, std::vector<std::string> words2);

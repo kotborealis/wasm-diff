@@ -1,4 +1,4 @@
 #pragma once
 #include <string>
 
-std::wstring ReadFileToWString(std::string filename);
+std::string ReadFileToString(std::string filename);

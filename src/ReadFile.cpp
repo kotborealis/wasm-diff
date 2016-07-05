@@ -10,7 +10,7 @@ std::wstring ReadFileToWString(std::string filename){
     std::wifstream stream(filename.c_str());
     
     if(!stream){
-        std::wcout<<L"No such file: "<<filename<<L"\n";
+        std::wcout<<L"No such file: "<<filename.c_str()<<L"\n";
         return str;
     }
 

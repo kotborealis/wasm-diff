@@ -11,8 +11,9 @@ std::wstring ReadFileToWString(std::string filename){
     stream.imbue(std::locale(""));
 
     std::wstring str;
-    for(std::wstring c; stream >> c;)
-        str+=c+L'\n';
+    std::wstring c;
+    while(std::getline(stream,c))
+        str+=c+L" \n";
 
     stream.close();
     return str;

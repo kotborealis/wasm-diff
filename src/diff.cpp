@@ -49,7 +49,6 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<s
         for(auto it = common_suffix.begin(); it != common_suffix.end(); it++)
             diff.push_back(new DIFF_INFO(*it,DIFF_EQUAL));
 
-
     return diff;
 }
 
@@ -227,7 +226,6 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::wstring> text1, std::ve
 
 /**
  * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
- * FIXME: айдунно лол, но похоже после каждого слова оказываются переводы строк
  */
 std::vector<std::wstring> splitString(const std::wstring str){
     std::vector<std::wstring> tokens;

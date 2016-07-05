@@ -41,9 +41,17 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::wstring> words1, std::vector<s
 
     diff = diffCompute(words1_chop,words2_chop);
 
-    if(common_prefix.size()>0)
+    if(common_prefix.size()>0){
+        /**
+         * Скажите привет костылям
+         * Если не реверсить вектор, то он будет добавлен в обратном порядке
+         * Мне лень уже переделывать этот мерзкий for
+         * Пусть останется так.
+         */
+        std::reverse(common_prefix.begin(),common_prefix.end());
         for(auto it = common_prefix.begin(); it != common_prefix.end(); it++)
             diff.insert(diff.begin(),new DIFF_INFO(*it,DIFF_EQUAL));
+    }
 
     if(common_suffix.size()>0)
         for(auto it = common_suffix.begin(); it != common_suffix.end(); it++)

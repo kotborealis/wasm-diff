@@ -51,7 +51,7 @@
 
 	function diff_splitByLines(diffs){
 		const sentence_end_regexp = 
-			/(?:\n|\r\n|\n\r)$/g;
+			/(?:\n|\r\n|\n\r|\.\s|(?:\.){3}\s|\?\s|\!\s)$/g;
 
 		const n_diff = [];
 		let i = 0;
@@ -102,8 +102,8 @@
 				buff_line_right = _html.diff__new(buff_line_right,_id);
 			}
 			else{
-				buff_line_left = _html.diff__eql(buff_line_left,_id);
-				buff_line_right = _html.diff__eql(buff_line_right,_id);
+				buff_line_left = _html.diff__eql_l(buff_line_left,_id);
+				buff_line_right = _html.diff__eql_r(buff_line_right,_id);
 			}
 			_id++;
 
@@ -127,29 +127,34 @@
 	_html.diff__insert = (e) => "<span class='diff__insert'>"+e+"</span>";
 	_html.diff__remove = (e) => "<span class='diff__remove'>"+e+"</span>";
 
-	_html.diff__eql = (e,id) => "<span class='diff__eql' id='e"+id+"'>"+e+"</span>";
+	_html.diff__eql_l = (e,id) => "<span class='diff__eql' "+
+								"onmouseover=\"_highlight('el"+id+"','er"+id+"')\" "+
+								"id='el"+id+"'>"+e+"</span>";
+	_html.diff__eql_r = (e,id) => "<span class='diff__eql' "+
+								"onmouseover=\"_highlight('el"+id+"','er"+id+"')\" "+
+								"id='er"+id+"'>"+e+"</span>";
 
 	_html.diff__old = (e,id) => "<span class='diff__old' "+
-								"onclick='_highlightOldAndNew("+id+")' "+
+								"onmouseover=\"_highlight('o"+id+"','n"+id+"')\" "+
 								"id='o"+id+"'>"+e+"</span>";
 
 	_html.diff__new = (e,id) => "<span class='diff__new' "+
-								"onclick='_highlightOldAndNew("+id+")' "+
+								"onmouseover=\"_highlight('o"+id+"','n"+id+"')\" "+
 								"id='n"+id+"'>"+e+"</span>";
 
 	let cur_highlighted = null;
 
-	const _highlightOldAndNew = (id)=>{
+	const _highlight = (id1,id2)=>{
 		if(cur_highlighted!==null){
 			if(cur_highlighted[0]!==null)
 				cur_highlighted[0].classList.remove('diff__highlight');
 			if(cur_highlighted[1]!==null)
 				cur_highlighted[1].classList.remove('diff__highlight');
 		}
-		if(id!==undefined){
+		if(id1!==undefined & id2!==undefined){
 			cur_highlighted=[];
-			const e1 = document.getElementById("o"+id);
-			const e2 = document.getElementById("n"+id);
+			const e1 = document.getElementById(id1);
+			const e2 = document.getElementById(id2);
 			cur_highlighted.push(e1,e2);
 			if(cur_highlighted[0]!==null)
 				cur_highlighted[0].classList.add('diff__highlight');

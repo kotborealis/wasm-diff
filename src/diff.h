@@ -1,18 +1,19 @@
 #pragma once
 #include <string>
 #include <vector>
-#define DIFF_EQUAL 0
-#define DIFF_INSERT 1
-#define DIFF_REMOVE -1
+
+enum DIFF_TYPE{
+    DIFF_EQUAL, DIFF_INSERT, DIFF_REMOVE
+};
 
 class DIFF_INFO{
 public:
-    DIFF_INFO(std::string _text, int _type){
+    DIFF_INFO(std::string _text, DIFF_TYPE _type){
         text = _text;
         type = _type;
     };
     std::string text;
-    int type;
+    DIFF_TYPE type;
 };
 
 std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2);

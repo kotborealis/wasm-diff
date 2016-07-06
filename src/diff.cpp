@@ -1,6 +1,5 @@
 #include "diff.h"
 #include <algorithm>
-#include <iostream>
 
 /**
  * Обёртка над главной функцией для удобного вызова

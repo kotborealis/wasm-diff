@@ -20,7 +20,7 @@
 		.then(e=>{
 			let obj;
 			try{
-				obj = JSON.parse(e);
+				obj = JSON.parse(e.replace(/\n/g,'\\n'));
 			}
 			catch(e){
 				throw new Error("Invalid testDiff files");
@@ -43,7 +43,7 @@
 					buff+="<span class='diff__insert'>"+text+"</span>";
 					break;
 				case -1:
-					buff+="<span class='diff__remove'>"+text+"</span>";
+					buff+="<span class='diff__remove'>"+text.replace(/\n/g,'')+"</span>";
 					break;
 			}
 		});

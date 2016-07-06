@@ -1,0 +1,58 @@
+<style>
+	.diff__insert{
+		background: #A6F3A6;
+	}
+	.diff__remove{
+		background: #f8cbcb;
+	}
+	.diff__new{
+		background: #EAFFEA;
+	}
+	.diff__old{
+		background: #FFECEC;
+	}
+</style>
+<div id="diff"></div>
+<script>
+	function testDiff(diff_f, filea, fileb){
+		fetch("http://"+location.host+"/test/"+filea+"/"+fileb)
+		.then(e=>e.text())
+		.then(e=>{
+			let obj;
+			try{
+				obj = JSON.parse(e);
+			}
+			catch(e){
+				throw new Error("Invalid testDiff files");
+			}
+			diff_f(obj);
+		})
+	}
+
+	function diff_ir(diff){
+		let buff = "";
+		diff.forEach(d=>{
+			const type = d[0];
+			const text = d[1].replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+			switch(type){
+				case 0:
+					buff+=text;
+					break;
+				case 1:
+					buff+="<span class='diff__insert'>"+text+"</span>";
+					break;
+				case -1:
+					buff+="<span class='diff__remove'>"+text+"</span>";
+					break;
+			}
+		});
+		diffInnerHTML(buff);
+	}
+
+	function diffInnerHTML(buff){
+		document.getElementById("diff").innerHTML = "<pre>"+buff+"</pre>";
+	}
+
+	testDiff(diff_ir,"test1a","test1b");
+</script>

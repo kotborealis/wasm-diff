@@ -45,27 +45,6 @@
 		})
 	}
 
-	function diff_ir(diff){
-		let buff = "";
-		diff.forEach(d=>{
-			const type = d[0];
-			const text = d[1].replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-			switch(type){
-				case 0:
-					buff+="<span class='diff__equal'>"+text+"</span>";
-					break;
-				case 1:
-					buff+="<span class='diff__insert_'>"+text+"</span>";
-					break;
-				case -1:
-					buff+="<span class='diff__remove'>"+text+"</span>";
-					break;
-			}
-		});
-		diffInnerHTML(buff);
-	}
-
 	function diff_splitByLines(diffs){
 		const sentence_end_regexp = 
 			/(?:\n|\r\n|\n\r)$/g;
@@ -76,7 +55,7 @@
 			if(n_diff[i]===undefined)
 				n_diff[i]=[];
 			n_diff[i].push(diff);
-			if(diff[0]>0 && diff[1].match(sentence_end_regexp)!==null)
+			if(diff[0]>=0 && diff[1].match(sentence_end_regexp)!==null)
 				i++;
 		});
 
@@ -84,20 +63,20 @@
 	}
 
 	function diff_sideBySide(diff){
-		let __diff_pointer_id = 0;
 		let buff_left = "";
 		let buff_right = "";
 
 		n_diff = diff_splitByLines(diff);
+		console.log(n_diff);
 		n_diff.forEach(line=>{
 			let changed = false;
+			let buff_line_left = "";
+			let buff_line_right = "";
 			line.forEach(d=>{
-				let buff_line_left = "";
-				let buff_line_right = "";
 				const type = d[0];
 				const text = d[1].replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-				if(d[0]!==0)
+				if(type!==0)
 					changed=true;
 
 				switch(type){
@@ -112,14 +91,14 @@
 						buff_line_left+=_html.diff__remove(text);
 						break;
 				}
-				if(changed){
-					buff_line_left = _html.diff__old(buff_line_left);
-					buff_line_right = _html.diff__new(buff_line_right);
-				}
-
-				buff_left += buff_line_left;
-				buff_right += buff_line_right;
 			});
+			if(changed){
+				buff_line_left = _html.diff__old(buff_line_left);
+				buff_line_right = _html.diff__new(buff_line_right);
+			}
+
+			buff_left += buff_line_left;
+			buff_right += buff_line_right;
 		});
 		diffInnerHTML(buff_left,0);
 		diffInnerHTML(buff_right,1);
@@ -130,15 +109,19 @@
 		document.getElementsByClassName("diff")[i].innerHTML = buff;
 	}
 
+	let _ptr_id = 0;
 
 	const _html = {};
 
-	_html.diff__equal = e=> "<span class='diff__equal'>"+e+"</span>"
+	_html.diff__equal = e=> e;
 	_html.diff__insert = e=> "<span class='diff__insert'>"+e+"</span>";
 	_html.diff__remove = e=> "<span class='diff__remove'>"+e+"</span>";
 
 	_html.diff__old = e=> "<span class='diff__old'>"+e+"</span>";
 	_html.diff__new = e=> "<span class='diff__new'>"+e+"</span>";
+
+	_html.diff__insert_ptr = e=> "<span class='diff__insert_ptr'>"+e+"</span>";
+	_html.diff__remove_ptr = e=> "<span class='diff__equal_ptr'>"+e+"</span>";
 
 	testDiff(diff_sideBySide,"test1a","test1b");
 </script>

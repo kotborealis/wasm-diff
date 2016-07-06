@@ -1,18 +1,34 @@
 <style>
+	html,body{
+		margin:0;
+		padding:0;
+	}
+	.diff{
+		background-color: #eaeaea;
+		font-family: monospace;
+		margin:5px;
+		white-space: pre-wrap;
+		overflow: auto;
+		border: 1px solid grey;
+	}
+	.diff__equal{
+		
+	}
 	.diff__insert{
-		background: #A6F3A6;
+		background: rgba(139,201,139,0.5);
 	}
 	.diff__remove{
-		background: #f8cbcb;
+		background: rgba(218,173,173,0.5);
 	}
 	.diff__new{
-		background: #EAFFEA;
+		background: rgba(166,243,166,0.5);
 	}
 	.diff__old{
-		background: #FFECEC;
+		background: rgba(248,203,203,0.5);
 	}
 </style>
-<div id="diff"></div>
+<pre class="diff" style="max-width:50%;position: absolute;left:0;right:50%;"></pre>
+<pre class="diff" style="max-width:50%;position: absolute;right:0;left:50%;"></pre>
 <script>
 	function testDiff(diff_f, filea, fileb){
 		fetch("http://"+location.host+"/test/"+filea+"/"+fileb)
@@ -37,10 +53,10 @@
 
 			switch(type){
 				case 0:
-					buff+=text;
+					buff+="<span class='diff__equal'>"+text+"</span>";
 					break;
 				case 1:
-					buff+="<span class='diff__insert'>"+text+"</span>";
+					buff+="<span class='diff__insert_'>"+text+"</span>";
 					break;
 				case -1:
 					buff+="<span class='diff__remove'>"+text+"</span>";
@@ -50,9 +66,70 @@
 		diffInnerHTML(buff);
 	}
 
-	function diffInnerHTML(buff){
-		document.getElementById("diff").innerHTML = "<pre>"+buff+"</pre>";
+	function diff_splitByLines(diffs){
+		const sentence_end_regexp = 
+			/(?:\n|\r\n|\n\r)$/g;
+
+		const n_diff = [];
+		let i = 0;
+		diffs.forEach(diff=>{
+			if(n_diff[i]===undefined)
+				n_diff[i]=[];
+			n_diff[i].push(diff);
+			if(diff[0]>0 && diff[1].match(sentence_end_regexp)!==null)
+				i++;
+		});
+
+		return n_diff;
 	}
 
-	testDiff(diff_ir,"test1a","test1b");
+	function diff_sideBySide(diff){
+		let buff_left = "";
+		let buff_right = "";
+
+		n_diff = diff_splitByLines(diff);
+		n_diff.forEach(line=>{
+			let changed = false;
+			line.forEach(d=>{
+				let buff_line_left = "";
+				let buff_line_right = "";
+				const type = d[0];
+				const text = d[1].replace(/</g,'&lt;').replace(/>/g,'&gt;');
+
+				if(d[0]!==0)
+					changed=true;
+
+				switch(type){
+					case 0:
+						buff_line_left+="<span class='diff__equal'>"+text+"</span>";
+						buff_line_right+="<span class='diff__equal'>"+text+"</span>";
+						break;
+					case 1:
+						buff_line_right+="<span class='diff__insert'>"+text+"</span>";
+						break;
+					case -1:
+						buff_line_left+="<span class='diff__remove'>"+text+"</span>";
+						break;
+				}
+				if(changed){
+					buff_line_left = "<span class='diff__old'>"+buff_line_left+"</span>";
+					buff_line_right = "<span class='diff__new'>"+buff_line_right+"</span>";
+				}
+
+				buff_left += buff_line_left;
+				buff_right += buff_line_right;
+			});
+		});
+		diffInnerHTML(buff_left,0);
+		diffInnerHTML(buff_right,1);
+	}
+
+	function diffInnerHTML(buff,i){
+		if(i===undefined)i=0;
+		document.getElementsByClassName("diff")[i].innerHTML = buff;
+	}
+
+	
+
+	testDiff(diff_sideBySide,"test1a","test1b");
 </script>

@@ -17,32 +17,32 @@ int main(int argc, char** argv){
     std::cout<<"[";
     int it;
     for(it = 0; it < diff.size()-1; it++){
-        DIFF_TYPE type = diff[it]->type;
+        int type = diff[it]->type;
         std::string str = diff[it]->text;
         if(str=="\n")str="\\n";
         switch(type){
-            case DIFF_EQUAL:
+            case 0:
                 std::cout<<"[0,\""<<str<<"\"],";
                 break;
-            case DIFF_INSERT:
+            case 1:
                 std::cout<<"[1,\""<<str<<"\"],";
                 break;
-            case DIFF_REMOVE:
+            case -1:
                 std::cout<<"[-1,\""<<str<<"\"],";
                 break;
         }
     }
-    DIFF_TYPE type = diff[it]->type;
+    int type = diff[it]->type;
     std::string str = diff[it]->text;
     if(str=="\n")str="\\n";
     switch(type){
-        case DIFF_EQUAL:
+        case 0:
             std::cout<<"[0,\""<<str<<"\"]";
             break;
-        case DIFF_INSERT:
+        case 1:
             std::cout<<"[1,\""<<str<<"\"]";
             break;
-        case DIFF_REMOVE:
+        case -1:
             std::cout<<"[-1,\""<<str<<"\"]";
             break;
     }

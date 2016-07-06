@@ -1,6 +1,9 @@
 #pragma once
 #include <string>
 #include <vector>
+#define DIFF_EQUAL 0
+#define DIFF_INSERT 1
+#define DIFF_REMOVE -1
 
 class DIFF_INFO{
 public:

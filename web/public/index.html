@@ -1,168 +1,19 @@
-<style>
-	html,body{
-		margin:0;
-		padding:0;
-	}
-	.diff{
-		background-color: #efefef;
-		font-family: monospace;
-		margin:5px;
-		white-space: pre-wrap;
-		overflow: auto;
-		border: 1px solid grey;
-	}
-	.diff__equal{
-		
-	}
-	.diff__insert{
-		background: rgba(139,201,139,0.5);
-	}
-	.diff__remove{
-		background: rgba(218,173,173,0.5);
-	}
-	.diff__new{
-		background: rgba(166,243,166,0.5);
-	}
-	.diff__old{
-		background: rgba(248,203,203,0.5);
-	}
-	.diff__highlight{
-		box-shadow: 0 0 10px rgba(0,0,0,0.8);
-	}
-</style>
-<pre class="diff" style="max-width:50%;position: absolute;left:0;right:50%;"></pre>
-<pre class="diff" style="max-width:50%;position: absolute;right:0;left:50%;"></pre>
-<script>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Diff</title>
+	<link type="text/css" rel="stylesheet" href="/style.css" media="screen">
+</head>
+<body>
 
-	function testDiff(diff_f, filea, fileb){
-		fetch("http://"+location.host+"/test/"+filea+"/"+fileb)
-		.then(e=>e.text())
-		.then(e=>{
-			let obj;
-			try{
-				obj = JSON.parse(e.replace(/\n/g,'\\n'));
-			}
-			catch(e){
-				throw new Error("Invalid testDiff files");
-			}
-			diff_f(obj);
-		})
-	}
-
-	function diff_splitByLines(diffs){
-		const sentence_end_regexp = 
-			/(?:\n|\r\n|\n\r|\.\s|(?:\.){3}\s|\?\s|\!\s)$/g;
-
-		const n_diff = [];
-		let i = 0;
-		diffs.forEach(diff=>{
-			if(n_diff[i]===undefined)
-				n_diff[i]=[];
-			n_diff[i].push(diff);
-			if(diff[0]>=0 && diff[1].match(sentence_end_regexp)!==null)
-				i++;
-		});
-
-		return n_diff;
-	}
-
-	function diff_sideBySide(diff){
-		diff = diff.filter(e=>e[1].length>0);
-		let buff_left = "";
-		let buff_right = "";
-
-		n_diff = diff_splitByLines(diff);
-		console.log(n_diff);
-		n_diff.forEach(line=>{
-			let changed = false;
-			let buff_line_left = "";
-			let buff_line_right = "";
-			line.forEach(d=>{
-				const type = d[0];
-				const text = d[1].replace(/</g,'&lt;').replace(/>/g,'&gt;');
-
-				if(type!==0)
-					changed=true;
-
-				switch(type){
-					case 0:
-						buff_line_left  += _html.diff__equal(text,_id);
-						buff_line_right += _html.diff__equal(text,_id);
-						break;
-					case 1:
-						buff_line_right += _html.diff__insert(text,_id);
-						break;
-					case -1:
-						buff_line_left  += _html.diff__remove(text,_id);
-						break;
-				}
-			});
-
-			if(changed){
-				buff_line_left = _html.diff__old(buff_line_left,_id);
-				buff_line_right = _html.diff__new(buff_line_right,_id);
-			}
-			else{
-				buff_line_left = _html.diff__eql_l(buff_line_left,_id);
-				buff_line_right = _html.diff__eql_r(buff_line_right,_id);
-			}
-			_id++;
-
-			buff_left += buff_line_left;
-			buff_right += buff_line_right;
-		});
-		diffInnerHTML(buff_left,0);
-		diffInnerHTML(buff_right,1);
-	}
-
-	function diffInnerHTML(buff,i){
-		if(i===undefined)i=0;
-		document.getElementsByClassName("diff")[i].innerHTML = buff;
-	}
-
-	let _id = 0;
-
-	const _html = {};
-
-	_html.diff__equal  = (e) => e;
-	_html.diff__insert = (e) => "<span class='diff__insert'>"+e+"</span>";
-	_html.diff__remove = (e) => "<span class='diff__remove'>"+e+"</span>";
-
-	_html.diff__eql_l = (e,id) => "<span class='diff__eql' "+
-								"onmouseover=\"_highlight('el"+id+"','er"+id+"')\" "+
-								"id='el"+id+"'>"+e+"</span>";
-	_html.diff__eql_r = (e,id) => "<span class='diff__eql' "+
-								"onmouseover=\"_highlight('el"+id+"','er"+id+"')\" "+
-								"id='er"+id+"'>"+e+"</span>";
-
-	_html.diff__old = (e,id) => "<span class='diff__old' "+
-								"onmouseover=\"_highlight('o"+id+"','n"+id+"')\" "+
-								"id='o"+id+"'>"+e+"</span>";
-
-	_html.diff__new = (e,id) => "<span class='diff__new' "+
-								"onmouseover=\"_highlight('o"+id+"','n"+id+"')\" "+
-								"id='n"+id+"'>"+e+"</span>";
-
-	let cur_highlighted = null;
-
-	const _highlight = (id1,id2)=>{
-		if(cur_highlighted!==null){
-			if(cur_highlighted[0]!==null)
-				cur_highlighted[0].classList.remove('diff__highlight');
-			if(cur_highlighted[1]!==null)
-				cur_highlighted[1].classList.remove('diff__highlight');
-		}
-		if(id1!==undefined & id2!==undefined){
-			cur_highlighted=[];
-			const e1 = document.getElementById(id1);
-			const e2 = document.getElementById(id2);
-			cur_highlighted.push(e1,e2);
-			if(cur_highlighted[0]!==null)
-				cur_highlighted[0].classList.add('diff__highlight');
-			if(cur_highlighted[1]!==null)
-				cur_highlighted[1].classList.add('diff__highlight');
-		}
-	};
-
-	testDiff(diff_sideBySide,"test1a","test1b");
-</script>
+	<div class="container container-left">
+		<input type="file" id="file1" name="file1"/>
+		<pre class="diff"></pre>
+	</div>
+	<div class="container container-left">
+		<input type="file" id="file2" name="file2"/>
+		<pre class="diff"></pre>
+	</div>
+</body>
+<script type="text/javascript" src="/diff.js"></script>
+</html>

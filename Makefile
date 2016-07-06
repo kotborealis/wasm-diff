@@ -20,4 +20,8 @@ clean:
 	@echo " Cleaning..."; 
 	@echo " $(RM) -r $(BUILDDIR)/*.o $(TARGET)"; $(RM) -r $(BUILDDIR)/*.o $(TARGET)
 
+libdiff:
+	@echo " Building libdiff"
+	g++ -std=c++11 -shared -fPIC src/diff_c.c src/diff.cpp -o ./bin/libdiff.so 
+
 .PHONY: clean

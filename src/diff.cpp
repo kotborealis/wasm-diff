@@ -1,6 +1,9 @@
 #include "diff.h"
 #include <algorithm>
 #include <iostream>
+#define DIFF_EQUAL 0
+#define DIFF_INSERT 1
+#define DIFF_REMOVE -1
 /**
  * Обёртка над главной функцией для удобного вызова
  * принимает две строки, внтури сплитает их на слова

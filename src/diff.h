@@ -2,18 +2,14 @@
 #include <string>
 #include <vector>
 
-enum DIFF_TYPE{
-    DIFF_EQUAL, DIFF_INSERT, DIFF_REMOVE
-};
-
 class DIFF_INFO{
 public:
-    DIFF_INFO(std::string _text, DIFF_TYPE _type){
+    DIFF_INFO(std::string _text, int _type){
         text = _text;
         type = _type;
     };
     std::string text;
-    DIFF_TYPE type;
+    int type;
 };
 
 std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2);

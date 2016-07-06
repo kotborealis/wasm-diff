@@ -63,6 +63,7 @@
 	}
 
 	function diff_sideBySide(diff){
+		diff = diff.filter(e=>e[1].length>0);
 		let buff_left = "";
 		let buff_right = "";
 
@@ -81,21 +82,26 @@
 
 				switch(type){
 					case 0:
-						buff_line_left+=_html.diff__equal(text);
-						buff_line_right+=_html.diff__equal(text);
+						buff_line_left  += _html.diff__equal(text,_id);
+						buff_line_right += _html.diff__equal(text,_id);
 						break;
 					case 1:
-						buff_line_right+=_html.diff__insert(text);
+						buff_line_right += _html.diff__insert(text,_id);
 						break;
 					case -1:
-						buff_line_left+=_html.diff__remove(text);
+						buff_line_left  += _html.diff__remove(text,_id);
 						break;
 				}
 			});
 			if(changed){
-				buff_line_left = _html.diff__old(buff_line_left);
-				buff_line_right = _html.diff__new(buff_line_right);
+				buff_line_left = _html.diff__old(buff_line_left,_id);
+				buff_line_right = _html.diff__new(buff_line_right,_id);
 			}
+			else{
+				buff_line_left = _html.diff__eql(buff_line_left,_id);
+				buff_line_right = _html.diff__eql(buff_line_right,_id);
+			}
+			_id++;
 
 			buff_left += buff_line_left;
 			buff_right += buff_line_right;
@@ -109,19 +115,17 @@
 		document.getElementsByClassName("diff")[i].innerHTML = buff;
 	}
 
-	let _ptr_id = 0;
+	let _id = 0;
 
 	const _html = {};
 
-	_html.diff__equal = e=> e;
-	_html.diff__insert = e=> "<span class='diff__insert'>"+e+"</span>";
-	_html.diff__remove = e=> "<span class='diff__remove'>"+e+"</span>";
+	_html.diff__equal  = (e) => e;
+	_html.diff__insert = (e) => "<span class='diff__insert'>"+e+"</span>";
+	_html.diff__remove = (e) => "<span class='diff__remove'>"+e+"</span>";
 
-	_html.diff__old = e=> "<span class='diff__old'>"+e+"</span>";
-	_html.diff__new = e=> "<span class='diff__new'>"+e+"</span>";
-
-	_html.diff__insert_ptr = e=> "<span class='diff__insert_ptr'>"+e+"</span>";
-	_html.diff__remove_ptr = e=> "<span class='diff__equal_ptr'>"+e+"</span>";
+	_html.diff__eql = (e,id) => "<span class='diff__eql' id='e"+id+"'>"+e+"</span>";
+	_html.diff__old = (e,id) => "<span class='diff__old' id='o"+id+"'>"+e+"</span>";
+	_html.diff__new = (e,id) => "<span class='diff__new' id='n"+id+"'>"+e+"</span>";
 
 	testDiff(diff_sideBySide,"test1a","test1b");
 </script>

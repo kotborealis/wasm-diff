@@ -1,6 +1,6 @@
 #include "diff.h"
 #include <algorithm>
-
+#include <iostream>
 /**
  * Обёртка над главной функцией для удобного вызова
  * принимает две строки, внтури сплитает их на слова
@@ -30,15 +30,20 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<st
         return diff;
     }
 
+    //длина общего префикса
     int common_len_prefix = diff_commonPrefix(words1, words2);
+    //схороняем общий префикс
     std::vector<std::string> common_prefix = std::vector<std::string>(words1.begin(),words1.begin()+common_len_prefix);
-
-    int common_len_suffix = diff_commonSuffix(words1, words2);
-    std::vector<std::string> common_suffix = std::vector<std::string>(words1.end()-common_len_suffix,words1.end());
-
-    std::vector<std::string> words1_chop = std::vector<std::string>(words1.begin()+common_len_prefix,words1.end()-common_len_suffix);
-    std::vector<std::string> words2_chop = std::vector<std::string>(words2.begin()+common_len_prefix,words2.end()-common_len_suffix);
-
+    //обрезаем общий префикс
+    std::vector<std::string> words1_chop = std::vector<std::string>(words1.begin()+common_len_prefix,words1.end());
+    std::vector<std::string> words2_chop = std::vector<std::string>(words2.begin()+common_len_prefix,words2.end());
+    //длина общего суффикса (ищем общий суффикс уже из обрезанного)
+    int common_len_suffix = diff_commonSuffix(words1_chop, words2_chop);
+    //схороняем общий суффикс
+    std::vector<std::string> common_suffix = std::vector<std::string>(words1_chop.end()-common_len_suffix,words1_chop.end());
+    //обрезаем общий суффикс
+    words1_chop = std::vector<std::string>(words1_chop.begin(),words1_chop.end()-common_len_suffix);
+    words2_chop = std::vector<std::string>(words2_chop.begin(),words2_chop.end()-common_len_suffix);
     diff = diffCompute(words1_chop,words2_chop);
 
     if(common_prefix.size()>0){

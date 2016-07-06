@@ -15,7 +15,7 @@
 <div id="diff"></div>
 <script>
 	function testDiff(diff_f, filea, fileb){
-		fetch("http://192.168.1.155:8019/test/"+filea+"/"+fileb)
+		fetch("http://"+location.host+"/test/"+filea+"/"+fileb)
 		.then(e=>e.text())
 		.then(e=>{
 			let obj;

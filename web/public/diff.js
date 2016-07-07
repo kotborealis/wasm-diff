@@ -12,7 +12,7 @@ diff.diffFiles = (files)=>{
 }
 
 diff.splitDiff = (diffs)=>{
-	const _ = /(?:\n|\r\n|\n\r|\.\s|(?:\.){3}\s|\?\s|\!\s)$/g;
+	const _ = /(?:\n|\r\n|\n\r)$/g;
 	const n_diff = [];
 	let i = 0;
 	diffs.forEach(diff=>{
@@ -47,14 +47,14 @@ diff.show_sideBySide = (_diff)=>{
 
 			switch(type){
 				case 0:
-					buff_line_left  += diff.getHtml.diff__equal(text,_id);
-					buff_line_right += diff.getHtml.diff__equal(text,_id);
+					buff_line_left  += diff.getHtml.diff__equal(text);
+					buff_line_right += diff.getHtml.diff__equal(text);
 					break;
 				case 1:
-					buff_line_right += diff.getHtml.diff__insert(text,_id);
+					buff_line_right += diff.getHtml.diff__insert(text);
 					break;
 				case -1:
-					buff_line_left  += diff.getHtml.diff__remove(text,_id);
+					buff_line_left  += diff.getHtml.diff__remove(text);
 					break;
 			}
 		});
@@ -85,46 +85,40 @@ diff.getHtml.diff__equal  = (e) => e;
 diff.getHtml.diff__insert = (e) => "<span class='diff__insert'>"+e+"</span>";
 diff.getHtml.diff__remove = (e) => "<span class='diff__remove'>"+e+"</span>";
 
+// Large strings are faster then concatenating small pieces
 diff.getHtml.diff__eql_l = (e,id) =>
-	"<span class='diff__eql' "+
-	"onmouseover=\"diff.highlight('el"+id+"','er"+id+"')\" "+
-	"id='el"+id+"'>"+e+"</span>";
+	"<span class='diff__eql' onmouseover=\"diff.highlight('el"+id+"','er"+id+"')\" onmouseleave=\"diff.highlight_hide();\" id='el"+id+"'>"+e+"</span>";
 diff.getHtml.diff__eql_r = (e,id) => 
-	"<span class='diff__eql' "+
-	"onmouseover=\"diff.highlight('el"+id+"','er"+id+"')\" "+
-	"id='er"+id+"'>"+e+"</span>";
+	"<span class='diff__eql' onmouseover=\"diff.highlight('er"+id+"','el"+id+"')\" onmouseleave=\"diff.highlight_hide();\" id='er"+id+"'>"+e+"</span>";
 
 diff.getHtml.diff__old = (e,id) => 
-	"<span class='diff__old' "+
-	"onmouseover=\"diff.highlight('o"+id+"','n"+id+"')\" "+
-	"id='o"+id+"'>"+e+"</span>";
+	"<span class='diff__old' onmouseover=\"diff.highlight('o"+id+"','n"+id+"')\" onmouseleave=\"diff.highlight_hide();\" id='o"+id+"'>"+e+"</span>";
 
 diff.getHtml.diff__new = (e,id) => 
-	"<span class='diff__new' "+
-	"onmouseover=\"diff.highlight('o"+id+"','n"+id+"')\" "+
-	"id='n"+id+"'>"+e+"</span>";
+	"<span class='diff__new' onmouseover=\"diff.highlight('n"+id+"','o"+id+"')\" onmouseleave=\"diff.highlight_hide();\" id='n"+id+"'>"+e+"</span>";
 
-diff.cur_highlighted = null;
+diff.cur_highlighted;
 
 diff.highlight = (id1,id2)=>{
-	if(diff.cur_highlighted!==null){
-		if(diff.cur_highlighted[0]!==null)
-			diff.cur_highlighted[0].classList.remove('diff__highlight');
-		if(diff.cur_highlighted[1]!==null)
-			diff.cur_highlighted[1].classList.remove('diff__highlight');
-	}
-	if(id1!==undefined & id2!==undefined){
-		diff.cur_highlighted=[];
-		const e1 = document.getElementById(id1);
-		const e2 = document.getElementById(id2);
-		diff.cur_highlighted.push(e1,e2);
-		if(diff.cur_highlighted[0]!==null)
-			diff.cur_highlighted[0].classList.add('diff__highlight');
-		if(diff.cur_highlighted[1]!==null)
-			diff.cur_highlighted[1].classList.add('diff__highlight');
+	const e1 = document.getElementById(id1);
+	const e2 = document.getElementById(id2);
+	diff.cur_highlighted = [e1,e2];
+
+	diff.cur_highlighted[0].classList.add('diff__highlight');
+
+	if(diff.cur_highlighted[1]!==null){
+		diff.cur_highlighted[1].classList.add('diff__highlight');
+		tooltip.innerHTML = diff.cur_highlighted[1].innerHTML;
+		tooltip.showAtElement(diff.cur_highlighted[0]);
 	}
 };
 
+diff.highlight_hide = ()=>{
+	tooltip.hide();
+	diff.cur_highlighted[0].classList.remove('diff__highlight');
+	if(diff.cur_highlighted[1]!==null)
+		diff.cur_highlighted[1].classList.remove('diff__highlight');
+};
 /*file select*/
 let diffFiles = null;
 let diffFilesCount = 0;
@@ -153,3 +147,20 @@ const file_input2 = document.getElementById("file2");
 
 file_input1.addEventListener("change",handleFile);
 file_input2.addEventListener("change",handleFile);
+
+/*tooltip*/
+const tooltip = document.getElementById("tooltip");
+
+tooltip.show = (x,y)=>{
+	tooltip.style.left = x+"px";
+	tooltip.style.top = y+"px";
+	tooltip.style.display='block';
+};
+
+tooltip.showAtElement = (e)=>{
+	tooltip.show(e.offsetLeft,e.offsetTop + e.offsetHeight);
+};
+
+tooltip.hide = ()=>{
+	tooltip.style.display='none';	
+}

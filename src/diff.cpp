@@ -248,6 +248,8 @@ std::vector<std::string> splitString(const std::string str){
         if(*it == ' ' || *it == '\n')
             tokens.push_back("");
     }
+    if(tokens.back()=="")
+    	tokens.pop_back();
     return tokens;
 }
 

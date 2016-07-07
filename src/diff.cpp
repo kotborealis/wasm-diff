@@ -225,7 +225,7 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vec
         text1b = std::vector<std::string>(text1.begin()+x,text1.end());
 
     std::vector<std::string> text2b;
-    if(text2.size()==x)
+    if(text2.size()==y)
         text2b = std::vector<std::string>();
     else
         text2b = std::vector<std::string>(text2.begin()+y,text2.end());
@@ -244,12 +244,11 @@ std::vector<std::string> splitString(const std::string str){
     std::vector<std::string> tokens;
     tokens.push_back("");
     for(auto it = str.begin(); it != str.end(); it++){
-        tokens[tokens.size()-1] = tokens[tokens.size()-1]+=*it;
+        tokens[tokens.size()-1]+=*it;
         if(*it == ' ' || *it == '\n')
             tokens.push_back("");
     }
-    if(tokens.back()=="")
-    	tokens.pop_back();
+
     return tokens;
 }
 

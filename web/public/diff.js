@@ -89,7 +89,6 @@ diff.el.info  = (text,class_) =>{
 };
 
 diff.el.highlight = (elements_a,elements_b,class_a,class_b,id) =>{
-	console.log(elements_a,elements_b,class_a,class_b,id);
 	const el = document.createElement('span');
 	el.className = class_a;
 	el.onmouseleave = diff.highlight_hide;
@@ -100,8 +99,8 @@ diff.el.highlight = (elements_a,elements_b,class_a,class_b,id) =>{
 	er.onmouseleave = diff.highlight_hide;
 	elements_b.forEach(e=>er.appendChild(e));
 	
-	el.onmouseover = ()=>diff.highlight(el,er);
-	er.onmouseover = ()=>diff.highlight(er,el);
+	el.onmouseenter = diff.highlight.bind(null,el,er);
+	er.onmouseenter = diff.highlight.bind(null,er,el);
 
 	return [el,er];
 }
@@ -113,8 +112,8 @@ diff.highlight = (e1,e2)=>{
 	diff.cur_highlighted = [e1,e2];
 
 	diff.cur_highlighted[0].classList.add('diff__highlight');
-
 	diff.cur_highlighted[1].classList.add('diff__highlight');
+
 	tooltip.innerHTML = diff.cur_highlighted[1].innerHTML;
 	tooltip.showAtElement(diff.cur_highlighted[0]);
 };

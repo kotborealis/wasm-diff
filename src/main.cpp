@@ -14,38 +14,22 @@ int main(int argc, char** argv){
     std::string n = ReadFileToString(argv[2]);
     std::vector<DIFF_INFO*> diff = diffString(o,n);
 
-    std::cout<<"[";
-    int it;
-    for(it = 0; it < diff.size()-1; it++){
-        int type = diff[it]->type;
-        std::string str = diff[it]->text;
-        if(str=="\n")str="\\n";
-        switch(type){
-            case 0:
-                std::cout<<"[0,\""<<str<<"\"],";
-                break;
-            case 1:
-                std::cout<<"[1,\""<<str<<"\"],";
-                break;
-            case -1:
-                std::cout<<"[-1,\""<<str<<"\"],";
-                break;
-        }
+    for(auto it = diff.begin(); it != diff.end(); it++){
+    	auto type = (*it)->type;
+    	auto text = (*it)->text;
+    	switch(type){
+    		case DIFF_EQUAL:
+    			std::cout<<text;
+    			break;
+			case DIFF_INSERT:
+    			std::cout<<"+"<<text;
+    			break;
+			case DIFF_REMOVE:
+    			std::cout<<"-"<<text;
+    			break;
+    	}
     }
-    int type = diff[it]->type;
-    std::string str = diff[it]->text;
-    if(str=="\n")str="\\n";
-    switch(type){
-        case 0:
-            std::cout<<"[0,\""<<str<<"\"]";
-            break;
-        case 1:
-            std::cout<<"[1,\""<<str<<"\"]";
-            break;
-        case -1:
-            std::cout<<"[-1,\""<<str<<"\"]";
-            break;
-    }
-    std::cout<<"]";
+    std::cout<<std::endl;
+
     return 0;
 }

@@ -163,7 +163,10 @@ tooltip.show = (x,y)=>{
 };
 
 tooltip.showAtElement = (e)=>{
-	tooltip.show(e.offsetLeft,e.offsetTop + e.offsetHeight);
+	const rect = e.getBoundingClientRect();
+	const y = rect.bottom + window.pageYOffset - document.documentElement.clientTop;
+	const x = rect.left + window.pageXOffset - document.documentElement.clientLeft;
+	tooltip.show(x,y);
 };
 
 tooltip.hide = ()=>{

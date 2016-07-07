@@ -1,15 +1,9 @@
 const diff = {};
 
-diff.diffStrings = (text1,text2)=>{
+diff.diffFiles = (files)=>{
 	fetch("http://"+location.host+"/diff/",{
 		method: 'post',
-		headers: {  
-      		"Content-type": "application/json; charset=UTF-8"  
-    	},  
-    	body: JSON.stringify({
-    		text1,
-    		text2
-    	})
+    	body: files
 	})
 	.then(e=>e.json())
 	.then(e=>{
@@ -132,34 +126,30 @@ diff.highlight = (id1,id2)=>{
 };
 
 /*file select*/
-let diffFiles = ["",""];
-function handleFile1(event){
+let diffFiles = null;
+let diffFilesCount = 0;
+function handleFile(event){
 	const file = event.target.files[0];
-	console.log(file);
 	if(file.type!=='text/plain'){
-		diffFiles[0]="";
 		return;
 	}
-	const reader = new FileReader();
-	reader.onload = ((e)=>{
-		diffFiles[0] = e.target.result;
-		diff.diffStrings(diffFiles[0],diffFiles[1]);
-	});
-	reader.readAsText(file);
-}
-function handleFile2(event){
-	const file = event.target.files[0];
-	console.log(file);
-	if(file.type!=='text/plain'){
-		diffFiles[1]="";
-		return;
+	else{
+		if(diffFiles===null)
+			diffFiles = new FormData();
+		diffFiles.append('diff_files[]',file);
+
+		diffFilesCount++;
+		if(diffFilesCount>=2){
+			diff.diffFiles(diffFiles);
+			diffFiles = null;
+			diffFilesCount=0;
+			file_input1.value = '';
+			file_input2.value = '';
+		}
 	}
-	const reader = new FileReader();
-	reader.onload = ((e)=>{
-		diffFiles[1] = e.target.result;
-		diff.diffStrings(diffFiles[0],diffFiles[1]);
-	});
-	reader.readAsText(file);
 }
-document.getElementById("file1").addEventListener("change",handleFile1);
-document.getElementById("file2").addEventListener("change",handleFile2);
+const file_input1 = document.getElementById("file1");
+const file_input2 = document.getElementById("file2");
+
+file_input1.addEventListener("change",handleFile);
+file_input2.addEventListener("change",handleFile);

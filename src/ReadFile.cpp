@@ -15,8 +15,9 @@ std::string ReadFileToString(std::string filename){
     }
 
     stream.imbue(std::locale(""));
+    std::getline(stream,str);
     while(std::getline(stream,c))
-        str+=c+"\n";
+        str+="\n" + c;
 
     stream.close();
     return str;

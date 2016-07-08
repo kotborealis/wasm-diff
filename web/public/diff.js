@@ -178,7 +178,7 @@ const tooltip = document.getElementById("tooltip");
 tooltip.show = (x,y)=>{
 	tooltip.style.left = x+"px";
 	tooltip.style.top = y+"px";
-	tooltip.style.display='block';
+	tooltip.classList.remove('tooltip__hide');
 };
 
 tooltip.showAtElement = (e)=>{
@@ -189,5 +189,5 @@ tooltip.showAtElement = (e)=>{
 };
 
 tooltip.hide = ()=>{
-	tooltip.style.display='none';	
+	tooltip.classList.add('tooltip__hide');	
 }

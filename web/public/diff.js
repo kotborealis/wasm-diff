@@ -29,14 +29,15 @@ diff.diffFiles = (files)=>{
 }
 
 diff.splitDiff = (diffs)=>{
-	const _ = /(?:\n|\r\n|\n\r)$/g;
+	const _ = /(?:\n)$/g;
 	const n_diff = [];
 	let i = 0;
 	diffs.forEach(diff=>{
 		if(n_diff[i]===undefined)
 			n_diff[i]=[];
 		n_diff[i].push(diff);
-		if(diff.type>=0 && diff.text.match(_)!==null)
+		console.log(i,diff.text);
+		if(diff.text.match(_)!==null)
 			i++;
 	});
 	return n_diff;

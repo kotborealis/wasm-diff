@@ -62,11 +62,8 @@ html,body{
 	padding:5px;
 	margin-left: 4px;
 	margin-top: 4px;
-	opacity:1;
-	transition: opacity 0.3s ease;
 }
 
 .tooltip__hide{
-	opacity:0!important;
-	left:-10000px!important;
+	display:none!important;
 }

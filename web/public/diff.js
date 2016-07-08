@@ -133,8 +133,12 @@ diff.highlight = (e1,e2)=>{
 	diff.cur_highlighted[0].classList.add('diff__highlight');
 	diff.cur_highlighted[1].classList.add('diff__highlight');
 
-	tooltip.innerHTML = diff.cur_highlighted[1].innerHTML;
-	tooltip.showAtElement(diff.cur_highlighted[0]);
+	if(diff.cur_highlighted[1].textContent!==" " && 
+			diff.cur_highlighted[1].textContent!=="\n" && 
+			diff.cur_highlighted[1].textContent.length>0){
+		tooltip.innerHTML = diff.cur_highlighted[1].innerHTML;
+		tooltip.showAtElement(diff.cur_highlighted[0]);
+	}
 };
 
 diff.highlight_hide = ()=>{

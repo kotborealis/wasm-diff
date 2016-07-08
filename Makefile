@@ -7,7 +7,7 @@ TARGET_LIB := bin/libdiff.so
 SRCEXT := cpp
 SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
-CFLAGS := -std=c++11
+CFLAGS := -std=c++11 -Ofast -march=native
 
 $(TARGET): $(OBJECTS)
 	@echo " Linking..."

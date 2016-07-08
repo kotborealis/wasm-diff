@@ -62,16 +62,13 @@ diff.show_sideBySide = (_diff)=>{
 
 		let _;
 		if(changed){
-			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new',_id);
-			buff_left.push(_[0]);
-			buff_right.push(_[1]);
+			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
 		}
 		else{
-			buff_line_left.forEach(e=>buff_left.push(e));
-			buff_line_right.forEach(e=>buff_right.push(e));
+			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
 		}
-
-		_id++;
+		buff_left.push(_[0]);
+		buff_right.push(_[1]);
 	});
 	const diff_l = document.getElementsByClassName("diff")[0];
 	const diff_r = document.getElementsByClassName("diff")[1];
@@ -90,7 +87,7 @@ diff.el.info  = (text,class_) =>{
 	return e;
 };
 
-diff.el.highlight = (elements_a,elements_b,class_a,class_b,id) =>{
+diff.el.highlight = (elements_a,elements_b,class_a,class_b) =>{
 	const el = document.createElement('span');
 	el.className = class_a;
 	el.onmouseout = diff.highlight_hide;
@@ -104,11 +101,31 @@ diff.el.highlight = (elements_a,elements_b,class_a,class_b,id) =>{
 	el.onmouseover = diff.highlight.bind(null,el,er);
 	er.onmouseover = diff.highlight.bind(null,er,el);
 
+	el.onclick = diff.scrollTo.bind(null,er);
+	er.onclick = diff.scrollTo.bind(null,el);
+
 	return [el,er];
 }
 
 /*highlight*/
 diff.cur_highlighted;
+diff.cur_scrollhighlighted=null;
+diff.cur_scrollhighlighted_timer=0;
+
+diff.scrollTo = (e)=>{
+	diff.hide_scrollhighlight();
+	diff.cur_scrollhighlighted = e;
+	e.classList.add('diff__scrollhighlight');
+	e.scrollIntoView();
+
+	clearTimeout(diff.cur_scrollhighlighted_timer);
+	diff.cur_scrollhighlighted_timer = setTimeout(diff.hide_scrollhighlight,1500);
+};
+diff.hide_scrollhighlight = ()=>{
+	if(diff.cur_scrollhighlighted!==null)
+		diff.cur_scrollhighlighted.classList.remove('diff__scrollhighlight');
+	diff.cur_scrollhighlighted=null;
+};
 
 diff.highlight = (e1,e2)=>{
 	diff.cur_highlighted = [e1,e2];

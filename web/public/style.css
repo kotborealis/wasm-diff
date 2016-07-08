@@ -38,11 +38,10 @@ html,body{
 	background: rgba(248,203,203,0.5);
 }
 .diff__highlight{
-	box-shadow: 0 0 10px rgba(0,0,0,0.8);
+	background: rgba(140,140,140,0.2);
 }
 .diff__scrollhighlight{
-	box-shadow: 0 0 10px rgba(135,105,0,0.9);
-	background: rgba(170,190,0,0.5);	
+	background: rgba(200,230,0,0.5);	
 }
 
 #tooltip{

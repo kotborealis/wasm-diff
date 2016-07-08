@@ -2,14 +2,30 @@ const diff = {};
 
 /*main*/
 diff.diffFiles = (files)=>{
+	const t = {};
+	t.startTime = (new Date).getTime();
+	info.set('status','calling server');
 	fetch("http://"+location.host+"/diff/",{
 		method: 'post',
     	body: files
 	})
-	.then(e=>e.json())
 	.then(e=>{
+		t.serverTime = (new Date).getTime();
+		return e.json();
+	})
+	.then(e=>{
+		info.set('status','rendering');
 		diff.show_sideBySide(e);
-	});
+		info.set('status','done');
+		t.renderTime = (new Date).getTime();
+
+		info.data.time = {};
+		info.data.time.server = (t.serverTime - t.startTime)/1000 + 's';
+		info.data.time.render = (t.renderTime - t.serverTime)/1000 + 's';
+		info.data.time.total = (t.renderTime - t.startTime)/1000 + 's';
+		info.update();
+	})
+	.catch(e=>info.set('status','error '+e));
 }
 
 diff.splitDiff = (diffs)=>{
@@ -27,7 +43,8 @@ diff.splitDiff = (diffs)=>{
 };
 
 diff.show_sideBySide = (_diff)=>{
-	let _id = 0;
+	let nodes_count = 0;
+
 	_diff = _diff.filter(e=>e.text.length>0);
 
 	const buff_left = [];
@@ -50,12 +67,15 @@ diff.show_sideBySide = (_diff)=>{
 				case 0:
 					buff_line_left.push(diff.el.info(text,''));
 					buff_line_right.push(diff.el.info(text,''));
+					nodes_count+=2;
 					break;
 				case 1:
 					buff_line_right.push(diff.el.info(text,'diff__insert'));
+					nodes_count++;
 					break;
 				case -1:
 					buff_line_left.push(diff.el.info(text,'diff__remove'));
+					nodes_count++;
 					break;
 			}
 		});
@@ -63,18 +83,24 @@ diff.show_sideBySide = (_diff)=>{
 		let _;
 		if(changed){
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
+			nodes_count++;
 		}
 		else{
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
+			nodes_count++;
 		}
 		buff_left.push(_[0]);
 		buff_right.push(_[1]);
 	});
 	const diff_l = document.getElementsByClassName("diff")[0];
 	const diff_r = document.getElementsByClassName("diff")[1];
+
+	diff_l.innerHTML=diff_r.innerHTML='';
 	
 	buff_left.forEach(e=>diff_l.appendChild(e));
 	buff_right.forEach(e=>diff_r.appendChild(e));
+
+	info.set('nodes',nodes_count);
 };
 
 /*elements*/
@@ -153,6 +179,9 @@ let diffFilesCount = 0;
 function handleFile(event){
 	const file = event.target.files[0];
 	if(file.type!=='text/plain'){
+		info.set('status','wrong file type');
+		file_input1.value = '';
+		file_input2.value = '';
 		return;
 	}
 	else{
@@ -195,3 +224,44 @@ tooltip.showAtElement = (e)=>{
 tooltip.hide = ()=>{
 	tooltip.classList.add('tooltip__hide');	
 }
+
+/*info*/
+const info = {};
+info.visible = false;
+info.data = {};
+info.el = document.getElementById("info");
+info.el.style.left = 100+"px";
+info.el.style.top = 100+"px";
+info.set = (n,i)=>{
+	info.data[n] = i;
+	info.update();
+};
+info.push = (n,i)=>{
+	if(!Array.isArray(info.data[n]))
+		info.data[n]=[];
+	info.data[n].push(i);
+	info.update();
+}
+info.update = ()=>
+	info.el.textContent = JSON.stringify(info.data,null,' ');
+
+info.show = ()=>{
+	info.el.classList.remove('tooltip__hide');
+	info.visible = true;
+}
+
+info.hide = ()=>{
+	info.el.classList.add('tooltip__hide');
+	info.visible = false;
+}
+
+info.toggle = ()=>{
+	info.visible ? info.hide() : info.show();
+};
+
+document.body.addEventListener('keypress',(e)=>{
+	if(e.keyCode===105)
+		info.toggle();
+});
+
+info.set('status','init');

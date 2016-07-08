@@ -48,7 +48,7 @@ html,body{
 	transition: background-color 0.3s ease;
 }
 
-#tooltip{
+.tooltip{
 	max-width:45%;
 	font-family: monospace;
 	white-space: pre-wrap;

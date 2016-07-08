@@ -61,13 +61,15 @@ diff.show_sideBySide = (_diff)=>{
 		});
 
 		let _;
-		if(changed)
+		if(changed){
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new',_id);
-		else
-			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql',_id);
-
-		buff_left.push(_[0]);
-		buff_right.push(_[1]);
+			buff_left.push(_[0]);
+			buff_right.push(_[1]);
+		}
+		else{
+			buff_line_left.forEach(e=>buff_left.push(e));
+			buff_line_right.forEach(e=>buff_right.push(e));
+		}
 
 		_id++;
 	});
@@ -91,16 +93,16 @@ diff.el.info  = (text,class_) =>{
 diff.el.highlight = (elements_a,elements_b,class_a,class_b,id) =>{
 	const el = document.createElement('span');
 	el.className = class_a;
-	el.onmouseleave = diff.highlight_hide;
+	el.onmouseout = diff.highlight_hide;
 	elements_a.forEach(e=>el.appendChild(e));
 
 	const er = document.createElement('span');
 	er.className = class_b;
-	er.onmouseleave = diff.highlight_hide;
+	er.onmouseout = diff.highlight_hide;
 	elements_b.forEach(e=>er.appendChild(e));
 	
-	el.onmouseenter = diff.highlight.bind(null,el,er);
-	er.onmouseenter = diff.highlight.bind(null,er,el);
+	el.onmouseover = diff.highlight.bind(null,el,er);
+	er.onmouseover = diff.highlight.bind(null,er,el);
 
 	return [el,er];
 }

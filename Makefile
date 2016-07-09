@@ -1,28 +1,14 @@
 CC := g++
-SRCDIR := src
-BUILDDIR := build
-TARGET := bin/void
-TARGET_LIB := bin/libdiff.so
- 
-SRCEXT := cpp
-SOURCES := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
-OBJECTS := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.o))
+TARGET_LIB := bin/libvoiddiff.so
 CFLAGS := -std=c++11 -Ofast -march=native
 
-$(TARGET): $(OBJECTS)
-	@echo " Linking..."
-	$(CC) $^ -o $(TARGET) $(LIB)
-
-$(BUILDDIR)/%.o: $(SRCDIR)/%.$(SRCEXT)
-	@mkdir -p $(BUILDDIR)/$(LIBDIR)
-	$(CC) $(CFLAGS) $(INC) -c -o $@ $<
+libdiff:
+	@mkdir -p bin
+	@echo " Building libdiff"
+	g++ $(CFLAGS) -shared -fPIC src/diff_c.c src/diff.cpp -o $(TARGET_LIB)
 
 clean:
 	@echo " Cleaning..."; 
-	$(RM) -r $(BUILDDIR)/*.o $(TARGET) $(TARGET_LIB)
-
-libdiff:
-	@echo " Building libdiff"
-	g++ $(CFLAGS) -shared -fPIC src/diff_c.c src/diff.cpp -o $(TARGET_LIB)
+	$(RM) $(TARGET_LIB)
 
 .PHONY: clean

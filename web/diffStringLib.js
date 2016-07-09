@@ -13,7 +13,7 @@ module.exports = function (){
 
 	const diff_info_array = ArrayType(ref.refType(diff_info));
 
-	const libdiff = new ffi.Library('../bin/libdiff.so',{
+	const libdiff = new ffi.Library('../bin/libvoiddiff',{
 		'__diffString': [diff_info_array,['string','string']]
 	});
 

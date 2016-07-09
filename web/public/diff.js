@@ -4,7 +4,7 @@ const diff = {};
 diff.diffFiles = (files)=>{
 	const t = {};
 	t.startTime = (new Date).getTime();
-	info.set('status','calling server');
+	info.set('status','diff');
 	fetch("http://"+location.host+"/diff/",{
 		method: 'post',
     	body: files
@@ -14,9 +14,9 @@ diff.diffFiles = (files)=>{
 		return e.json();
 	})
 	.then(e=>{
-		info.set('status','rendering');
+		info.set('status','render');
 		diff.show_sideBySide(e);
-		info.set('status','done');
+		info.set('status','success');
 		t.renderTime = (new Date).getTime();
 
 		info.data.time = {};
@@ -25,20 +25,40 @@ diff.diffFiles = (files)=>{
 		info.data.time.total = (t.renderTime - t.startTime)/1000 + 's';
 		info.update();
 	})
-	.catch(e=>info.set('status','error '+e));
+	.catch(e=>info.set('status','error_fetch'));
 }
 
 diff.splitDiff = (diffs)=>{
 	const _ = /(?:\n)$/g;
 	const n_diff = [];
 	let i = 0;
+	let eotl = {};
+	
 	diffs.forEach(diff=>{
 		if(n_diff[i]===undefined)
 			n_diff[i]=[];
+
 		n_diff[i].push(diff);
-		console.log(i,diff.text);
+
 		if(diff.text.match(_)!==null)
+			switch(diff.type){
+				case 0:
+					eotl.equal = true;
+					break;
+				case 1:
+					eotl.insert = true;
+					break;
+				case -1:
+					eotl.remove = true;
+					break;
+			}
+
+		if(eotl.equal===true || (eotl.insert === true && eotl.remove === true)){
+			//Reached end of the line
+			//BONUS DUCKS
+			eotl = {};
 			i++;
+		}
 	});
 	return n_diff;
 };

@@ -31,7 +31,7 @@ std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string te
  * Принимает два массива слов
  * Возвращает массив из ДИФФ_ИНФО
  */
-std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<std::string> words2){
+std::vector<DIFF_INFO*> diffMain(std::vector<std::string>& words1, std::vector<std::string>& words2){
 	std::vector<DIFF_INFO*> diff;
 
 	bool equal = words1.size() == words2.size();
@@ -76,7 +76,7 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<st
  * Проверяет пару простейших случаев
  * и вызывает диффБиссект
  */
-std::vector<DIFF_INFO*> diffCompute(std::vector<std::string> words1, std::vector<std::string> words2){
+std::vector<DIFF_INFO*> diffCompute(std::vector<std::string>& words1, std::vector<std::string>& words2){
 	std::vector<DIFF_INFO*> diff;
 
 	if(words1.size()==0){
@@ -103,7 +103,7 @@ std::vector<DIFF_INFO*> diffCompute(std::vector<std::string> words1, std::vector
  * Функция находит общую часть в середине двух массивов слов и делает дифф
  * по словам до и после этой части
  */
-std::vector<DIFF_INFO*> diffBisect(std::vector<std::string> text1, std::vector<std::string> text2){
+std::vector<DIFF_INFO*> diffBisect(std::vector<std::string>& text1, std::vector<std::string>& text2){
 	const int text1_length = text1.size();
 	const int text2_length = text2.size();
 	const int max_d = (text1_length + text2_length + 1) / 2;
@@ -221,7 +221,7 @@ std::vector<DIFF_INFO*> diffBisect(std::vector<std::string> text1, std::vector<s
  * Распилывает эти массивы по две части
  * И пускает их в диффМейн, рекурсия, жа.
  */
-std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vector<std::string> text2, int x, int y){
+std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string>& text1, std::vector<std::string>& text2, int x, int y){
 	auto text1a = std::vector<std::string>(text1.begin(),text1.begin()+x);
 	auto text2a = std::vector<std::string>(text2.begin(),text2.begin()+y);
 
@@ -229,17 +229,17 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vec
 	auto text2b = text2.size()==y ? std::vector<std::string>() : std::vector<std::string>(text2.begin()+y,text2.end());
 
 	auto diff_a = diffMain(text1a, text2a);
-	auto diff_b = diffMain(text1b, text2b);	 
+	auto diff_b = diffMain(text1b, text2b);
 
 	diff_a.insert(diff_a.end(),diff_b.begin(),diff_b.end());
-	
+
 	return diff_a;
 }
 
 /**
  * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
  */
-std::vector<std::string> splitString(const std::string str){
+std::vector<std::string> splitString(const std::string& str){
 	std::vector<std::string> tokens;
 	tokens.push_back("");
 	for(auto it = str.begin(); it != str.end(); it++){
@@ -254,7 +254,7 @@ std::vector<std::string> splitString(const std::string str){
 /**
  * Находит размер общего префикса в словах
  */
-int diff_commonPrefix(std::vector<std::string> words1, std::vector<std::string> words2){
+int diff_commonPrefix(std::vector<std::string>& words1, std::vector<std::string>& words2){
 	int n = std::min(words1.size(), words2.size());
 
 	for(int i = 0; i < n; i++)
@@ -266,7 +266,7 @@ int diff_commonPrefix(std::vector<std::string> words1, std::vector<std::string> 
 /**
  * Находит размер общего суффикса в словах
  */
-int diff_commonSuffix(std::vector<std::string> words1, std::vector<std::string> words2){
+int diff_commonSuffix(std::vector<std::string>& words1, std::vector<std::string>& words2){
 	int words1_len = words1.size();
 	int words2_len = words2.size();
 	int n = std::min(words1_len, words2_len);

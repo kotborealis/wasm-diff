@@ -8,10 +8,22 @@
  * И вызывает на них диффМейн
  */
 std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2){
-	std::vector<std::string> words1 = splitString(text1);
-	std::vector<std::string> words2 = splitString(text2);
+	auto words1 = splitString(text1);
+	auto words2 = splitString(text2);
 
-	return diffMain(words1, words2);
+	auto diff = diffMain(words1, words2);
+	for(auto it = diff.begin()+1; it != diff.end();){
+		auto p = *(it-1);
+		auto c = *(it);
+		if(p->type == c->type && p->text.back() != '\n'){
+			p->text += c->text;
+			diff.erase(it);
+		}
+		else
+		  it++;
+	}
+
+	return diff;
 }
 
 /**
@@ -34,46 +46,28 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::string> words1, std::vector<st
 	//длина общего префикса
 	int common_len_prefix = diff_commonPrefix(words1, words2);
 	//схороняем общий префикс
-	std::vector<std::string> common_prefix = std::vector<std::string>(words1.begin(),words1.begin()+common_len_prefix);
+	auto common_prefix = std::vector<std::string>(words1.begin(),words1.begin()+common_len_prefix);
 	//обрезаем общий префикс
-	std::vector<std::string> words1_chop = std::vector<std::string>(words1.begin()+common_len_prefix,words1.end());
-	std::vector<std::string> words2_chop = std::vector<std::string>(words2.begin()+common_len_prefix,words2.end());
+	auto words1_chop = std::vector<std::string>(words1.begin()+common_len_prefix,words1.end());
+	auto words2_chop = std::vector<std::string>(words2.begin()+common_len_prefix,words2.end());
 	//длина общего суффикса (ищем общий суффикс уже из обрезанного)
 	int common_len_suffix = diff_commonSuffix(words1_chop, words2_chop);
 	//схороняем общий суффикс
-	std::vector<std::string> common_suffix = std::vector<std::string>(words1_chop.end()-common_len_suffix,words1_chop.end());
+	auto common_suffix = std::vector<std::string>(words1_chop.end()-common_len_suffix,words1_chop.end());
 	//обрезаем общий суффикс
 	words1_chop = std::vector<std::string>(words1_chop.begin(),words1_chop.end()-common_len_suffix);
 	words2_chop = std::vector<std::string>(words2_chop.begin(),words2_chop.end()-common_len_suffix);
+
 	diff = diffCompute(words1_chop,words2_chop);
 
-	if(common_prefix.size()>0){
-		/**
-		 * Скажите привет костылям
-		 * Если не реверсить вектор, то он будет добавлен в обратном порядке
-		 * Мне лень уже переделывать этот мерзкий for
-		 * Пусть останется так.
-		 */
-		std::reverse(common_prefix.begin(),common_prefix.end());
-		for(auto it = common_prefix.begin(); it != common_prefix.end(); it++)
+	//Юзается реверс-итератор, чтобы вставлять префикс в правильном порядке
+	if(common_prefix.size()>0)
+		for(auto it = common_prefix.rbegin(); it != common_prefix.rend(); it++)
 			diff.insert(diff.begin(),new DIFF_INFO(*it,DIFF_EQUAL));
-	}
 
 	if(common_suffix.size()>0)
 		for(auto it = common_suffix.begin(); it != common_suffix.end(); it++)
 			diff.push_back(new DIFF_INFO(*it,DIFF_EQUAL));
-
-  for(auto it = diff.begin()+1; it != diff.end();){
-    auto p = *(it-1);
-    auto c = *(it);
-    if(p->type == c->type && p->text.back() != '\n'){
-      p->text += c->text;
-      diff.erase(it);
-    }
-    else{
-      it++;
-    }
-  }		
 
 	return diff;
 }
@@ -228,25 +222,17 @@ std::vector<DIFF_INFO*> diffBisect(std::vector<std::string> text1, std::vector<s
  * И пускает их в диффМейн, рекурсия, жа.
  */
 std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string> text1, std::vector<std::string> text2, int x, int y){
-	std::vector<std::string> text1a = std::vector<std::string>(text1.begin(),text1.begin()+x);
-	std::vector<std::string> text2a = std::vector<std::string>(text2.begin(),text2.begin()+y);
+	auto text1a = std::vector<std::string>(text1.begin(),text1.begin()+x);
+	auto text2a = std::vector<std::string>(text2.begin(),text2.begin()+y);
 
-	std::vector<std::string> text1b;
-	if(text1.size()==x)
-		text1b = std::vector<std::string>();
-	else
-		text1b = std::vector<std::string>(text1.begin()+x,text1.end());
+	auto text1b = text1.size()==x ? std::vector<std::string>() : std::vector<std::string>(text1.begin()+x,text1.end());
+	auto text2b = text2.size()==y ? std::vector<std::string>() : std::vector<std::string>(text2.begin()+y,text2.end());
 
-	std::vector<std::string> text2b;
-	if(text2.size()==y)
-		text2b = std::vector<std::string>();
-	else
-		text2b = std::vector<std::string>(text2.begin()+y,text2.end());
-
-	std::vector<DIFF_INFO*> diff_a = diffMain(text1a, text2a);
-	std::vector<DIFF_INFO*> diff_b = diffMain(text1b, text2b);	 
+	auto diff_a = diffMain(text1a, text2a);
+	auto diff_b = diffMain(text1b, text2b);	 
 
 	diff_a.insert(diff_a.end(),diff_b.begin(),diff_b.end());
+	
 	return diff_a;
 }
 

@@ -223,6 +223,15 @@ function handleFile(event){
 const file_input1 = document.getElementById("file1");
 const file_input2 = document.getElementById("file2");
 
+const disable_file_inputs = ()=>{
+	file_input1.disabled = true;
+	file_input2.disabled = true;
+}
+const enable_file_inputs = ()=>{
+	file_input1.disabled = false;
+	file_input2.disabled = false;
+}
+
 file_input1.addEventListener("change",handleFile);
 file_input2.addEventListener("change",handleFile);
 
@@ -292,10 +301,12 @@ info_status.set = (i)=>{
 			console.log(i);
 			info_status.el.textContent = "Ошибка сервера";
 			info_status.show();
+			enable_file_inputs();
 			break;
 		case 0:
 			info_status.el.textContent = "Загрузка...";
 			info_status.show();
+			disable_file_inputs();
 			break;
 		case 1:
 			info_status.el.textContent = "Рендер...";
@@ -304,6 +315,7 @@ info_status.set = (i)=>{
 		case 2:
 			info_status.el.textContent = "Выполнено";
 			info_status.show();
+			enable_file_inputs();
 			setTimeout(info_status.hide,1000);
 			break;
 	}

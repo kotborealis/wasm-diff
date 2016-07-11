@@ -32,18 +32,53 @@ diff.splitDiff = (diffs)=>{
 	const _ = /(?:\n)$/g;
 	const n_diff = [];
 	let i = 0;
-	let eotl = {};
 	
+	let expect_eotl = false;
 	diffs.forEach(diff=>{
 		if(n_diff[i]===undefined)
 			n_diff[i]=[];
-
 		n_diff[i].push(diff);
 
-		//СДЕЛАТЬ НОРМАЛЬНУЮ ФУНКЦИЮ РАЗБОРА
-		if(diff.type>=0 && diff.text.match(_)!==null){
-			i++;
+
+		/**
+		* Хорошо задокументированные костыли
+		* становятся просто ОРИГИНАЛЬНЫМ РЕШЕНИЕМ       // Аутизм и провокация, они остаются костылями.
+		**/
+
+		/**
+		* EOTL (End of the line) наступает тогда,
+		* КОГДА:
+		* текущй дифф собержит лайнбрейк
+		* И
+		* текущий дифф - equal ИЛИ мы ожидали появление не-equal диффа с лайн-брейком
+		**/
+		const eotl = diff.text.match(_) !== null &&
+					 (diff.type === 0 || (diff.type !== 0 && expect_eotl));
+
+		/**
+		* Если одна строка была полностью заменена на другую       //Например, "Аутизм не знает границ\n" --> "Все эти бабушки утонули\n"
+		* То нужен этот костыль
+		**/
+		const strReplaced = eotl && //Маленькая оптимизация, если eotl - false, то всё ниже не имеет значения
+							n_diff[i-1] !== undefined && //Если была предыдущаяя строка
+							n_diff[i-1].length === 1 &&  //И она состоиз из одного изменения
+							n_diff[i].length === 1 &&  //И текущая строка тоже состоит из одного изменения
+							n_diff[i][0].type !== 0 && //Если наша текущая строка не имеет тип equal
+							n_diff[i-1][0].type === -n_diff[i][0].type; //и у них противоположные типы
+																		//То надо будет закинуть текущую строку в предыдущую
+		if(eotl){
+			if(strReplaced){
+				n_diff[i-1].push(n_diff[i][0]); //Кидаем текущую строку в предыдущую
+				n_diff[i] = [];
+			}
+			else
+				i++;
+
+			expect_eotl = false; //Нет, пока никого не ждём, идите к чёрту.
 		}
+		else
+			if(diff.text.match(_)!==null && diff.type !== 0) //Если дифф содержит лайн-брейк и не equal
+				expect_eotl = true; //То мы определённо ждём появляения ещё одного не-equal диффа с лайн-брейком
 	});
 	return n_diff;
 };
@@ -58,6 +93,7 @@ diff.show_sideBySide = (_diff)=>{
 	n_diff = diff.splitDiff(_diff);
 
 	const diff_cnt = document.getElementsByClassName("diff")[0];
+	diff_cnt.innerHTML='';
 
 	n_diff.forEach(line=>{
 		let changed = false;

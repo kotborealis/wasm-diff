@@ -53,8 +53,8 @@ diff.splitDiff = (diffs)=>{
 					break;
 			}
 
-		//if(eotl.equal===true || (eotl.insert === true && eotl.remove === true)){
-		if(diff.text.match(_)!==null && diff.type>=0){
+		if(eotl.equal===true || (eotl.insert === true && eotl.remove === true)){
+		//if(diff.text.match(_)!==null && diff.type>=0){
 			//Reached end of the line
 			//BONUS DUCKS
 			eotl = {};

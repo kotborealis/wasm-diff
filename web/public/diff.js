@@ -40,24 +40,8 @@ diff.splitDiff = (diffs)=>{
 
 		n_diff[i].push(diff);
 
-		if(diff.text.match(_)!==null)
-			switch(diff.type){
-				case 0:
-					eotl.equal = true;
-					break;
-				case 1:
-					eotl.insert = true;
-					break;
-				case -1:
-					eotl.remove = true;
-					break;
-			}
-
-		//if(eotl.equal===true || (eotl.insert === true && eotl.remove === true)){
-		if(diff.text.match(_)!==null && diff.type>=0){
-			//Reached end of the line
-			//BONUS DUCKS
-			eotl = {};
+		//СДЕЛАТЬ НОРМАЛЬНУЮ ФУНКЦИЮ РАЗБОРА
+		if(diff.type>=0 && diff.text.match(_)!==null){
 			i++;
 		}
 	});

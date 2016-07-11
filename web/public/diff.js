@@ -67,7 +67,11 @@ diff.splitDiff = (diffs)=>{
 diff.show_sideBySide = (_diff)=>{
 	let nodes_count = 0;
 
-	_diff = _diff.filter(e=>e.text.length>0);
+	_diff = _diff.filter(e=>e.text.length>0).map(e=>{
+		if(e.text==='\r\n' || e.text==='\n')
+			e.text = '↵\n';
+		return e;
+	});;
 
 	const buff = [];
 

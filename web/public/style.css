@@ -19,10 +19,21 @@ html,body{
 .diff{
 	background-color: #efefef;
 	font-family: monospace;
-	white-space: pre-wrap;
+	white-space: wrap;
 	overflow: auto;
 	border: 1px solid gray;
 	padding:5px;
+}
+.diff__line{
+	display:flex;
+}
+.diff__line-left{
+	float:left;
+	width:50%;
+}
+.diff__line-right{
+	float:right;
+	width:50%;
 }
 .diff__equal{}
 .diff__insert{

@@ -69,10 +69,11 @@ diff.show_sideBySide = (_diff)=>{
 
 	_diff = _diff.filter(e=>e.text.length>0);
 
-	const buff_left = [];
-	const buff_right = [];
+	const buff = [];
 
 	n_diff = diff.splitDiff(_diff);
+
+	const diff_cnt = document.getElementsByClassName("diff")[0];
 
 	n_diff.forEach(line=>{
 		let changed = false;
@@ -103,24 +104,14 @@ diff.show_sideBySide = (_diff)=>{
 		});
 
 		let _;
-		if(changed){
+		if(changed)
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
-			nodes_count++;
-		}
-		else{
+		else
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
-			nodes_count++;
-		}
-		buff_left.push(_[0]);
-		buff_right.push(_[1]);
+		nodes_count++;
+		diff_cnt.appendChild(_);
 	});
-	const diff_l = document.getElementsByClassName("diff")[0];
-	const diff_r = document.getElementsByClassName("diff")[1];
 
-	diff_l.innerHTML=diff_r.innerHTML='';
-	
-	buff_left.forEach(e=>diff_l.appendChild(e));
-	buff_right.forEach(e=>diff_r.appendChild(e));
 
 	info.set('nodes',nodes_count);
 };
@@ -137,12 +128,12 @@ diff.el.info  = (text,class_) =>{
 
 diff.el.highlight = (elements_a,elements_b,class_a,class_b) =>{
 	const el = document.createElement('span');
-	el.className = class_a;
+	el.className = class_a+" diff__line-left";
 	el.onmouseout = diff.highlight_hide;
 	elements_a.forEach(e=>el.appendChild(e));
 
 	const er = document.createElement('span');
-	er.className = class_b;
+	er.className = class_b+" diff__line-right";
 	er.onmouseout = diff.highlight_hide;
 	elements_b.forEach(e=>er.appendChild(e));
 	
@@ -152,7 +143,11 @@ diff.el.highlight = (elements_a,elements_b,class_a,class_b) =>{
 	el.onclick = diff.scrollTo.bind(null,er);
 	er.onclick = diff.scrollTo.bind(null,el);
 
-	return [el,er];
+	const cnt = document.createElement('span');
+	cnt.className = "diff__line";
+	cnt.appendChild(el);
+	cnt.appendChild(er);
+	return cnt;
 }
 
 /*highlight*/

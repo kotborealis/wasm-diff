@@ -4,19 +4,20 @@ const diff = {};
 diff.diffFiles = (files)=>{
 	const t = {};
 	t.startTime = (new Date).getTime();
-	info.set('status','diff');
+	info_status.set(0);
 	fetch("http://"+location.host+"/diff/",{
 		method: 'post',
     	body: files
 	})
+	.catch(e=>info_status.set(-1))
 	.then(e=>{
 		t.serverTime = (new Date).getTime();
 		return e.json();
 	})
 	.then(e=>{
-		info.set('status','render');
+		info_status.set(1);
 		diff.show_sideBySide(e);
-		info.set('status','success');
+		info_status.set(2);
 		t.renderTime = (new Date).getTime();
 
 		info.data.time = {};
@@ -24,8 +25,7 @@ diff.diffFiles = (files)=>{
 		info.data.time.render = (t.renderTime - t.serverTime)/1000 + 's';
 		info.data.time.total = (t.renderTime - t.startTime)/1000 + 's';
 		info.update();
-	})
-	.catch(e=>info.set('status','error_fetch'));
+	});
 }
 
 diff.splitDiff = (diffs)=>{
@@ -261,12 +261,6 @@ info.set = (n,i)=>{
 	info.data[n] = i;
 	info.update();
 };
-info.push = (n,i)=>{
-	if(!Array.isArray(info.data[n]))
-		info.data[n]=[];
-	info.data[n].push(i);
-	info.update();
-}
 info.update = ()=>
 	info.el.textContent = JSON.stringify(info.data,null,' ');
 
@@ -289,4 +283,32 @@ document.body.addEventListener('keypress',(e)=>{
 		info.toggle();
 });
 
-info.set('status','init');
+/*info status*/
+const info_status = {};
+info_status.el = document.getElementById("info_status");
+info_status.set = (i)=>{
+	switch(i){
+		case -1:
+			console.log(i);
+			info_status.el.textContent = "Ошибка сервера";
+			info_status.show();
+			break;
+		case 0:
+			info_status.el.textContent = "Загрузка...";
+			info_status.show();
+			break;
+		case 1:
+			info_status.el.textContent = "Рендер...";
+			info_status.show();
+			break;
+		case 2:
+			info_status.el.textContent = "Выполнено";
+			info_status.show();
+			setTimeout(info_status.hide,1000);
+			break;
+	}
+};
+info_status.show = ()=>
+	info_status.el.classList.remove('tooltip__hide');
+info_status.hide = ()=>
+	info_status.el.classList.add('tooltip__hide');

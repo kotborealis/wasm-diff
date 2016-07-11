@@ -67,3 +67,14 @@ html,body{
 .tooltip__hide{
 	display:none!important;
 }
+
+.fixed{
+	position:fixed;
+}
+.tooltip__info {
+    padding: 10px 20px 10px 20px;
+    text-align: center;
+    width: 100px;
+    top:50px;
+    left:25px;
+}

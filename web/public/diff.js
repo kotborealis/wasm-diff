@@ -164,6 +164,8 @@ diff.scrollTo = (e)=>{
 	diff.cur_scrollhighlighted = e;
 	e.classList.add('diff__scrollhighlight');
 	e.scrollIntoView();
+	window.scrollBy(0,-200);
+	e.scrollIntoViewIfNeeded();
 
 	clearTimeout(diff.cur_scrollhighlighted_timer);
 	diff.cur_scrollhighlighted_timer = setTimeout(diff.hide_scrollhighlight,1500);
@@ -235,11 +237,15 @@ tooltip.show = (x,y)=>{
 	tooltip.classList.remove('tooltip__hide');
 };
 
-tooltip.showAtElement = (e)=>{
+const getElementPos = (e)=>{
 	const rect = e.getBoundingClientRect();
 	const y = rect.bottom + window.pageYOffset - document.documentElement.clientTop;
 	const x = rect.left + window.pageXOffset - document.documentElement.clientLeft;
-	tooltip.show(x,y);
+	return {x,y};
+}
+tooltip.showAtElement = (e)=>{
+	const pos = getElementPos(e);
+	tooltip.show(pos.x,pos.y);
 };
 
 tooltip.hide = ()=>{

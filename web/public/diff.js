@@ -199,8 +199,8 @@ let diffFiles = null;
 let diffFilesCount = 0;
 function handleFile(event){
 	const file = event.target.files[0];
-	if(file.type!=='text/plain'){
-		info.set('status','wrong file type');
+	if(file.type.indexOf('text/')<0 && file.type.length!==0){
+		info_status.set(-2);
 		file_input1.value = '';
 		file_input2.value = '';
 		return;
@@ -297,8 +297,11 @@ const info_status = {};
 info_status.el = document.getElementById("info_status");
 info_status.set = (i)=>{
 	switch(i){
+		case -2:
+			info_status.el.textContent = "Неверный формат файла";
+			info_status.show();
+			break;
 		case -1:
-			console.log(i);
 			info_status.el.textContent = "Ошибка сервера";
 			info_status.show();
 			enable_file_inputs();

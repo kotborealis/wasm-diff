@@ -163,8 +163,6 @@ diff.scrollTo = (e)=>{
 	diff.hide_scrollhighlight();
 	diff.cur_scrollhighlighted = e;
 	e.classList.add('diff__scrollhighlight');
-	e.scrollIntoView();
-	window.scrollBy(0,-200);
 	e.scrollIntoViewIfNeeded();
 
 	clearTimeout(diff.cur_scrollhighlighted_timer);

@@ -19,7 +19,7 @@ html,body{
 .diff{
 	background-color: #efefef;
 	font-family: monospace;
-	white-space: wrap;
+	white-space: pre-wrap;
 	overflow: auto;
 	border: 1px solid gray;
 	padding:5px;
@@ -29,11 +29,14 @@ html,body{
 }
 .diff__line-left{
 	float:left;
+	white-space: pre-wrap;
 	width:50%;
+	max-width:50%;
 }
 .diff__line-right{
 	float:right;
 	width:50%;
+	max-width:50%;
 }
 .diff__equal{}
 .diff__insert{

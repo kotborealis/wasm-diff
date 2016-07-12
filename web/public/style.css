@@ -57,9 +57,11 @@ html,body{
 .diff__scrollhighlight{
 	background: rgba(200,230,0,0.5);	
 }
-
 .diff__line{
 	transition: background-color 0.3s ease;
+}
+.shadow__symbol{
+	color:rgba(120,120,120,0.9);
 }
 
 .tooltip{

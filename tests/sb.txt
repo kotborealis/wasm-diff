@@ -1,4 +1,5 @@
-* Magazines
-** ''Bucks Co. Town & Country Living'' {{WS|buckscountymagazine.com}} 
-** ''Parents Express'' {{WS|parents-express.com}} 
-** ''Real Men, Rednecks'' {{WS|realmenredneck.com}} 
+Разработка и поддержка приложения
+
+- Исправление ошибок ПО
+
+Модератор

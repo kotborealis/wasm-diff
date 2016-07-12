@@ -29,37 +29,22 @@ diff.diffFiles = (files)=>{
 }
 
 diff.splitDiff = (diffs)=>{
-	const _ = /(?:\n)$/g;
 	const n_diff = [];
-	let i = 0;
-	
-	let expect_eotl = 0; // eotl - End of the line
+	let buff = [];
 	diffs.forEach(diff=>{
-		if(n_diff[i]===undefined)
-			n_diff[i]=[];
-		n_diff[i].push(diff);
-
-		let eotl = diff.text.match(_) !== null && diff.type>=0;
-		
-		if(eotl)
-			i++;
+		buff.push(diff);
+		if(diff.text.indexOf('\n')>=0 && diff.type>=0){
+			n_diff.push(buff);
+			buff=[];
+		}
 	});
 	return n_diff;
 };
 
 diff.show_sideBySide = (_diff)=>{
-	let nodes_count = 0;
-
-	_diff = _diff.filter(e=>e.text.length>0).map(e=>{
-		if(e.text==='\r\n' || e.text==='\n')
-			e.text = '↵\n';
-		return e;
-	});;
-
+	_diff = _diff.filter(e=>e.text.length>0);
 	const buff = [];
-
 	n_diff = diff.splitDiff(_diff);
-
 	const diff_cnt = document.getElementsByClassName("diff")[0];
 	diff_cnt.innerHTML='';
 
@@ -78,15 +63,12 @@ diff.show_sideBySide = (_diff)=>{
 				case 0:
 					buff_line_left.push(diff.el.info(text,''));
 					buff_line_right.push(diff.el.info(text,''));
-					nodes_count+=2;
 					break;
 				case 1:
 					buff_line_right.push(diff.el.info(text,'diff__insert'));
-					nodes_count++;
 					break;
 				case -1:
 					buff_line_left.push(diff.el.info(text,'diff__remove'));
-					nodes_count++;
 					break;
 			}
 		});
@@ -96,12 +78,8 @@ diff.show_sideBySide = (_diff)=>{
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
 		else
 			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
-		nodes_count++;
 		diff_cnt.appendChild(_);
 	});
-
-
-	info.set('nodes',nodes_count);
 };
 
 /*elements*/
@@ -109,7 +87,7 @@ diff.el = {};
 
 diff.el.info  = (text,class_) =>{
 	const e = document.createElement('span');
-	e.textContent = text;
+	e.innerHTML = text.replace(/\r?\n/g,"<span class='shadow__symbol'>↵</span>\n");
 	e.className = class_;
 	return e;
 };

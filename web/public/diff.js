@@ -11,7 +11,6 @@ diff.diffFiles = (files)=>{
 	.catch(e=>info_status.set(-1))
 	.then(e=>e.json())
 	.then(e=>{
-		info.set("detail0Time",(new Date).getTime());
 		diff.show_sideBySide(e);
 	});
 };
@@ -41,7 +40,6 @@ diff.splitDiff = (diffs,cb)=>{
 		buff=[];
 	});
 	let counter = 0;
-	info.set("detail1Time",(new Date).getTime());
 	for(let i=0;i<n_diff.length;i++){
 		if(n_diff[i].length===2)
 			diff.diffString(n_diff[i][0].text,n_diff[i][1].text,(e)=>{
@@ -61,14 +59,9 @@ const __done = (__diff,__cb)=>{
 	info_status.set(2);
 	info.set("endTime",(new Date).getTime());
 	info.set("total_duration",(info.data.endTime-info.data.startTime)/1000);
-	info.set("detail0_duration",(info.data.detail0Time-info.data.startTime)/1000);
-	info.set("detail1_duration",(info.data.endTime-info.data.detail1Time)/1000);
 	delete info.data.startTime;
-	delete info.data.detail0Time;
-	delete info.data.detail1Time;
 	delete info.data.endTime;
 	info.update();
-	delete info.data.endTime;
 	__cb(__diff);
 }
 

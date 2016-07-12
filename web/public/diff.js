@@ -45,13 +45,13 @@ diff.splitDiff = (diffs,cb)=>{
 diff.detail1 = (__diff,__cb)=>{
 	let counter = 0;
 	for(let i=0;i<__diff.length;i++){
-		if(__diff[i].length===2)
+		if(__diff[i].length>=2)
 			diff.diffString(__diff[i][0].text,__diff[i][1].text,(e)=>{
 				__diff[i] = e;
-				if(++counter===__diff.length-1)
+				if(++counter===__diff.length)
 					__done_helper(__diff,__cb);
 			});
-		else if(++counter===__diff.length-1)
+		else if(++counter===__diff.length)
 			__done_helper(__diff,__cb);
 	}
 }

@@ -18,7 +18,7 @@ diff.diffString = (str1,str2,cb)=>{
 	fetch("http://"+location.host+"/diff_1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
 	.then(e=>e.json())
 	.then(e=>cb(e))
-	//.catch(e=>info_status.set(-1));
+	.catch(e=>info_status.set(-1));
 };
 
 diff.splitDiff = (diffs,cb)=>{
@@ -39,10 +39,7 @@ diff.splitDiff = (diffs,cb)=>{
 			n_diff.push(buff);
 		buff=[];
 	});
-	if(!disable_detail1.checked)
-		diff.detail1(n_diff,cb);
-	else
-		__done_helper(n_diff,cb);
+	diff.detail1(n_diff,cb);
 };
 
 diff.detail1 = (__diff,__cb)=>{
@@ -155,33 +152,41 @@ highlight.hover = (event)=>{
 };
 
 /* controls */
-let diffFiles = null;
-let diffFilesCount = 0;
-function handleFile(event){
+let diffFile1 = null;
+let diffFile2 = null;
+function handleFile1(event){
 	const file = event.target.files[0];
 	if(file.type.indexOf('text/')<0 && file.type.length!==0){
 		info_status.set(-2);
 		file_input1.value = '';
+		return;
+	}
+	else
+		diffFile1 = file;
+}
+function handleFile2(event){
+	const file = event.target.files[0];
+	if(file.type.indexOf('text/')<0 && file.type.length!==0){
+		info_status.set(-2);
 		file_input2.value = '';
 		return;
 	}
-	else{
-		if(diffFiles===null)
-			diffFiles = new FormData();
-		diffFiles.append('diff_files[]',file);
-
-		diffFilesCount++;
-		if(diffFilesCount>=2){
-			diff.diffFiles(diffFiles);
-			diffFiles = null;
-			diffFilesCount=0;
-			file_input1.value = '';
-			file_input2.value = '';
-		}
+	else
+		diffFile2 = file;
+}
+const submit_form = ()=>{
+	if(diffFile1===null || diffFile2===null){
+		info_status.set(-3);
+		return;
 	}
+	const diffFiles = new FormData();
+	diffFiles.append('diff_files[]',diffFile1);
+	diffFiles.append('diff_files[]',diffFile2);
+	diff.diffFiles(diffFiles);
 }
 const file_input1 = document.getElementById("file1");
 const file_input2 = document.getElementById("file2");
+const file_submit_button = document.getElementById("file_submit_button");
 
 const disable_file_inputs = ()=>{
 	file_input1.disabled = true;
@@ -192,10 +197,9 @@ const enable_file_inputs = ()=>{
 	file_input2.disabled = false;
 }
 
-file_input1.addEventListener("change",handleFile);
-file_input2.addEventListener("change",handleFile);
-
-const disable_detail1 = document.getElementById('disable_detail1');
+file_input1.addEventListener("change",handleFile1);
+file_input2.addEventListener("change",handleFile2);
+file_submit_button.onclick = submit_form;
 
 /*tooltip*/
 const tooltip = document.getElementById("tooltip");

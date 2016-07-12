@@ -14,11 +14,11 @@ module.exports = function (){
 	const diff_info_array = ArrayType(ref.refType(diff_info));
 
 	const libdiff = new ffi.Library('./libvoiddiff',{
-		'__diffString': [diff_info_array,['string','string']]
+		'__diffString': [diff_info_array,['string','string','int']]
 	});
 
-	return function(text1, text2, callback){
-		const _ = libdiff.__diffString.async(text1,text2,(err,res)=>{
+	return function(text1, text2, detail, callback){
+		const _ = libdiff.__diffString.async(text1,text2,detail,(err,res)=>{
 			if(err) throw err;
 			const _ = res;
 			_.length=1;

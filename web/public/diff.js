@@ -2,83 +2,99 @@ const diff = {};
 
 /*main*/
 diff.diffFiles = (files)=>{
-	const t = {};
-	t.startTime = (new Date).getTime();
 	info_status.set(0);
-	fetch("http://"+location.host+"/diff/",{
+	fetch("http://"+location.host+"/diff_0/",{
 		method: 'post',
     	body: files
 	})
 	.catch(e=>info_status.set(-1))
+	.then(e=>e.json())
 	.then(e=>{
-		t.serverTime = (new Date).getTime();
-		return e.json();
-	})
-	.then(e=>{
-		info_status.set(1);
 		diff.show_sideBySide(e);
-		info_status.set(2);
-		t.renderTime = (new Date).getTime();
-
-		info.data.time = {};
-		info.data.time.server = (t.serverTime - t.startTime)/1000 + 's';
-		info.data.time.render = (t.renderTime - t.serverTime)/1000 + 's';
-		info.data.time.total = (t.renderTime - t.startTime)/1000 + 's';
-		info.update();
 	});
-}
+};
+diff.diffString = (str1,str2,cb)=>{
+	fetch("http://"+location.host+"/diff_1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
+	.then(e=>e.json())
+	.then(e=>cb(e))
+	.catch(e=>info_status.set(-1));
+};
 
-diff.splitDiff = (diffs)=>{
+diff.splitDiff = (diffs,cb)=>{
 	const n_diff = [];
-	let buff = [];
+	let buff=[];
 	diffs.forEach(diff=>{
 		buff.push(diff);
-		if(diff.text.indexOf('\n')>=0 && diff.type>=0){
+		const prev_el = n_diff.length-1;
+		const strReplaced = n_diff[prev_el] !== undefined &&
+							n_diff[prev_el].length === 1 &&
+							buff.length === 1 &&
+							buff[0].type !== 0 &&
+							n_diff[prev_el][0].type === -buff[0].type;
+
+		if(strReplaced)
+			n_diff[prev_el].push(buff[0]);
+		else
 			n_diff.push(buff);
-			buff=[];
-		}
+		buff=[];
 	});
-	return n_diff;
+	let counter = 0;
+	for(let i=0;i<n_diff.length;i++){
+		if(n_diff[i].length===2)
+			diff.diffString(n_diff[i][0].text,n_diff[i][1].text,(e)=>{
+				n_diff[i] = e;
+				if(++counter===n_diff.length-1){
+					info_status.set(2);
+					cb(n_diff);
+				}
+			});
+		else
+			if(++counter===n_diff.length-1){
+				info_status.set(2);
+				cb(n_diff);
+			}
+	}
 };
 
 diff.show_sideBySide = (_diff)=>{
 	_diff = _diff.filter(e=>e.text.length>0);
 	const buff = [];
-	n_diff = diff.splitDiff(_diff);
 	const diff_cnt = document.getElementsByClassName("diff")[0];
 	diff_cnt.innerHTML='';
 
-	n_diff.forEach(line=>{
-		let changed = false;
-		const buff_line_left = [];
-		const buff_line_right = [];
-		line.forEach(d=>{
-			const type = d.type;
-			const text = d.text;
+	diff.splitDiff(_diff,(n_diff)=>{
+		n_diff.forEach(line=>{
+			let changed = false;
+			const buff_line_left = [];
+			const buff_line_right = [];
+			line.forEach(d=>{
+				const type = d.type;
+				const text = d.text;
 
-			if(type!==0)
-				changed=true;
+				if(type!==0)
+					changed=true;
 
-			switch(type){
-				case 0:
-					buff_line_left.push(diff.el.info(text,''));
-					buff_line_right.push(diff.el.info(text,''));
-					break;
-				case 1:
-					buff_line_right.push(diff.el.info(text,'diff__insert'));
-					break;
-				case -1:
-					buff_line_left.push(diff.el.info(text,'diff__remove'));
-					break;
-			}
+				switch(type){
+					case 0:
+						buff_line_left.push(diff.el.info(text,''));
+						buff_line_right.push(diff.el.info(text,''));
+						break;
+					case 1:
+						buff_line_right.push(diff.el.info(text,'diff__insert'));
+						break;
+					case -1:
+						buff_line_left.push(diff.el.info(text,'diff__remove'));
+						break;
+				}
+			});
+
+			let _;
+			if(changed)
+				_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
+			else
+				_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
+			diff_cnt.appendChild(_);
 		});
-
-		let _;
-		if(changed)
-			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__old','diff__new');	
-		else
-			_ = diff.el.highlight(buff_line_left,buff_line_right,'diff__eql','diff__eql');
-		diff_cnt.appendChild(_);
 	});
 };
 

@@ -125,10 +125,14 @@ diff.el.highlight = (elements_a,elements_b,class_a,class_b) =>{
 	const el = document.createElement('span');
 	el.className = class_a+" diff__line-left";
 	elements_a.forEach(e=>el.appendChild(e));
+	if(el.textContent==='')
+		el.innerHTML = "<span class='shadow__symbol'>...</span>\n";
 
 	const er = document.createElement('span');
 	er.className = class_b+" diff__line-right";
 	elements_b.forEach(e=>er.appendChild(e));
+	if(er.textContent==='')
+		er.innerHTML = "<span class='shadow__symbol'>...</span>\n";
 
 	const cnt = document.createElement('span');
 	cnt.className = "diff__line";

@@ -62,7 +62,8 @@ html,body{
 	transition: background-color 0.3s ease;
 }
 .shadow__symbol{
-	color:rgba(120,120,120,0.1);
+	color:rgba(120,120,120,0.8);
+	font-size:90%;
 }
 
 /* Tooltip */

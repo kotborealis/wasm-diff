@@ -3,40 +3,35 @@ html,body{
 	padding:0;
 }
 
-.container{
-	margin-top:20px;
-	width:calc(50% - 20px);
-}
-.container-left{
-	float:left;
-	margin-left:10px;
-}
-.container-right{
-	float:right;
-	margin-right:10px;
+.controls{
+	margin:10px;
+	background-color: #efefef;
+	padding:10px;
 }
 
+/* Diff */
 .diff{
+	margin:5px;
 	background-color: #efefef;
 	font-family: monospace;
 	white-space: pre-wrap;
 	overflow: auto;
-	border: 1px solid gray;
+	border: 1px dotted #afafaf;
 	padding:5px;
 }
 .diff__line{
 	display:flex;
 }
-.diff__line-left{
-	float:left;
+.diff__line-left, .diff__line-right{
 	white-space: pre-wrap;
 	width:50%;
 	max-width:50%;
 }
+.diff__line-left{
+	float:left;
+}
 .diff__line-right{
 	float:right;
-	width:50%;
-	max-width:50%;
 }
 .diff__equal{}
 .diff__insert{
@@ -64,6 +59,7 @@ html,body{
 	color:rgba(120,120,120,0.9);
 }
 
+/* Tooltip */
 .tooltip{
 	max-width:45%;
 	font-family: monospace;
@@ -79,13 +75,8 @@ html,body{
 	margin-left: 4px;
 	margin-top: 4px;
 }
-
 .tooltip__hide{
 	display:none!important;
-}
-
-.fixed{
-	position:fixed;
 }
 .tooltip__info {
     padding: 10px 20px 10px 20px;
@@ -93,4 +84,9 @@ html,body{
     width: 100px;
     top:50px;
     left:25px;
+}
+
+/* helper styles */
+.fixed{
+	position:fixed;
 }

@@ -18,7 +18,7 @@ diff.diffString = (str1,str2,cb)=>{
 	fetch("http://"+location.host+"/diff_1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
 	.then(e=>e.json())
 	.then(e=>cb(e))
-	.catch(e=>info_status.set(-1));
+	//.catch(e=>info_status.set(-1));
 };
 
 diff.splitDiff = (diffs,cb)=>{
@@ -39,23 +39,27 @@ diff.splitDiff = (diffs,cb)=>{
 			n_diff.push(buff);
 		buff=[];
 	});
-	let counter = 0;
-	for(let i=0;i<n_diff.length;i++){
-		if(n_diff[i].length===2)
-			diff.diffString(n_diff[i][0].text,n_diff[i][1].text,(e)=>{
-				n_diff[i] = e;
-				if(++counter===n_diff.length-1){
-					__done(n_diff,cb);
-				}
-			});
-		else
-			if(++counter===n_diff.length-1){
-				__done(n_diff,cb);		
-			}
-	}
+	if(!disable_detail1.checked)
+		diff.detail1(n_diff,cb);
+	else
+		__done_helper(n_diff,cb);
 };
 
-const __done = (__diff,__cb)=>{
+diff.detail1 = (__diff,__cb)=>{
+	let counter = 0;
+	for(let i=0;i<__diff.length;i++){
+		if(__diff[i].length===2)
+			diff.diffString(__diff[i][0].text,__diff[i][1].text,(e)=>{
+				__diff[i] = e;
+				if(++counter===__diff.length-1)
+					__done_helper(__diff,__cb);
+			});
+		else if(++counter===__diff.length-1)
+			__done_helper(__diff,__cb);
+	}
+}
+
+const __done_helper = (__diff,__cb)=>{
 	info_status.set(2);
 	info.set("endTime",(new Date).getTime());
 	info.set("total_duration",(info.data.endTime-info.data.startTime)/1000);
@@ -146,7 +150,7 @@ highlight.hover = (event)=>{
 	highlight.hover_el = event.target;
 };
 
-/*file select*/
+/* controls */
 let diffFiles = null;
 let diffFilesCount = 0;
 function handleFile(event){
@@ -186,6 +190,8 @@ const enable_file_inputs = ()=>{
 
 file_input1.addEventListener("change",handleFile);
 file_input2.addEventListener("change",handleFile);
+
+const disable_detail1 = document.getElementById('disable_detail1');
 
 /*tooltip*/
 const tooltip = document.getElementById("tooltip");

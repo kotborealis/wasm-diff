@@ -95,65 +95,30 @@ diff.el.info  = (text,class_) =>{
 diff.el.highlight = (elements_a,elements_b,class_a,class_b) =>{
 	const el = document.createElement('span');
 	el.className = class_a+" diff__line-left";
-	el.onmouseout = diff.highlight_hide;
 	elements_a.forEach(e=>el.appendChild(e));
 
 	const er = document.createElement('span');
 	er.className = class_b+" diff__line-right";
-	er.onmouseout = diff.highlight_hide;
 	elements_b.forEach(e=>er.appendChild(e));
-	
-	el.onmouseover = diff.highlight.bind(null,el,er);
-	er.onmouseover = diff.highlight.bind(null,er,el);
-
-	el.onclick = diff.scrollTo.bind(null,er);
-	er.onclick = diff.scrollTo.bind(null,el);
 
 	const cnt = document.createElement('span');
 	cnt.className = "diff__line";
+	cnt.onmouseenter = highlight.hover;
 	cnt.appendChild(el);
 	cnt.appendChild(er);
 	return cnt;
 }
 
 /*highlight*/
-diff.cur_highlighted;
-diff.cur_scrollhighlighted=null;
-diff.cur_scrollhighlighted_timer=0;
+const highlight = {};
+highlight.hover_el;
 
-diff.scrollTo = (e)=>{
-	diff.hide_scrollhighlight();
-	diff.cur_scrollhighlighted = e;
-	e.classList.add('diff__scrollhighlight');
-	e.scrollIntoViewIfNeeded();
+highlight.hover = (event)=>{
+	if(highlight.hover_el)
+		highlight.hover_el.classList.remove('diff__hover');
 
-	clearTimeout(diff.cur_scrollhighlighted_timer);
-	diff.cur_scrollhighlighted_timer = setTimeout(diff.hide_scrollhighlight,1500);
-};
-diff.hide_scrollhighlight = ()=>{
-	if(diff.cur_scrollhighlighted!==null)
-		diff.cur_scrollhighlighted.classList.remove('diff__scrollhighlight');
-	diff.cur_scrollhighlighted=null;
-};
-
-diff.highlight = (e1,e2)=>{
-	diff.cur_highlighted = [e1,e2];
-
-	diff.cur_highlighted[0].classList.add('diff__highlight');
-	diff.cur_highlighted[1].classList.add('diff__highlight');
-
-	if(diff.cur_highlighted[1].textContent!==" " && 
-			diff.cur_highlighted[1].textContent!=="\n" && 
-			diff.cur_highlighted[1].textContent.length>0){
-		tooltip.innerHTML = diff.cur_highlighted[1].innerHTML;
-		tooltip.showAtElement(diff.cur_highlighted[0]);
-	}
-};
-
-diff.highlight_hide = ()=>{
-	tooltip.hide();
-	diff.cur_highlighted[0].classList.remove('diff__highlight');
-	diff.cur_highlighted[1].classList.remove('diff__highlight');
+	event.target.classList.add('diff__hover');
+	highlight.hover_el = event.target;
 };
 
 /*file select*/

@@ -51,10 +51,10 @@ html,body{
 .diff__old{
 	background: rgba(248,203,203,0.5);
 }
-.diff__highlight{
+.diff__hover{
 	background: rgba(130,130,130,0.5);
 }
-.diff__scrollhighlight{
+.diff__active{
 	background: rgba(200,230,0,0.5);	
 }
 .diff__line{

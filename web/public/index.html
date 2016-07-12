@@ -9,9 +9,14 @@
 	<div id="info_status" class="tooltip tooltip__hide fixed tooltip__info"></div>
 	<div id="tooltip" class="tooltip tooltip__hide"></div>
     <div class="controls">
-    	<input type="file" id="file1" name="file1" accesskey="q"/>
-    	<input type="file" id="file2" name="file2" accesskey="w"/>
-        <input type="checkbox" id="disable_detail1"/>Понизить точность
+        <div class="file_input">
+    	   <input type="file" id="file1" name="file1" accesskey="q"/>
+    	   <input type="file" id="file2" name="file2" accesskey="w"/>
+        </div>
+        <div class="checkbox_input">
+            <input type="checkbox" id="disable_detail1"  accesskey="a"/>
+            <label>Только построчно</label>
+        </div>
     </div>
 	<pre class="diff"></pre>
 </body>

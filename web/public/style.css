@@ -8,6 +8,15 @@ html,body{
 	background-color: #efefef;
 	padding:10px;
 }
+.controls .file_input, .controls .checkbox_input{
+	display: inline-block;
+}
+.controls .file_input{
+	
+}
+.controls .checkbox_input{
+	
+}
 
 /* Diff */
 .diff{
@@ -49,14 +58,11 @@ html,body{
 .diff__hover{
 	background: rgba(130,130,130,0.5);
 }
-.diff__active{
-	background: rgba(200,230,0,0.5);	
-}
 .diff__line{
 	transition: background-color 0.3s ease;
 }
 .shadow__symbol{
-	color:rgba(120,120,120,0.9);
+	color:rgba(120,120,120,0.1);
 }
 
 /* Tooltip */

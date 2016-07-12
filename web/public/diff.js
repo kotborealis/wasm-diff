@@ -3,6 +3,7 @@ const diff = {};
 /*main*/
 diff.diffFiles = (files)=>{
 	info_status.set(0);
+	info.set("startTime",(new Date).getTime());
 	fetch("http://"+location.host+"/diff_0/",{
 		method: 'post',
     	body: files
@@ -10,6 +11,7 @@ diff.diffFiles = (files)=>{
 	.catch(e=>info_status.set(-1))
 	.then(e=>e.json())
 	.then(e=>{
+		info.set("detail0Time",(new Date).getTime());
 		diff.show_sideBySide(e);
 	});
 };
@@ -39,22 +41,36 @@ diff.splitDiff = (diffs,cb)=>{
 		buff=[];
 	});
 	let counter = 0;
+	info.set("detail1Time",(new Date).getTime());
 	for(let i=0;i<n_diff.length;i++){
 		if(n_diff[i].length===2)
 			diff.diffString(n_diff[i][0].text,n_diff[i][1].text,(e)=>{
 				n_diff[i] = e;
 				if(++counter===n_diff.length-1){
-					info_status.set(2);
-					cb(n_diff);
+					__done(n_diff,cb);
 				}
 			});
 		else
 			if(++counter===n_diff.length-1){
-				info_status.set(2);
-				cb(n_diff);
+				__done(n_diff,cb);		
 			}
 	}
 };
+
+const __done = (__diff,__cb)=>{
+	info_status.set(2);
+	info.set("endTime",(new Date).getTime());
+	info.set("total_duration",(info.data.endTime-info.data.startTime)/1000);
+	info.set("detail0_duration",(info.data.detail0Time-info.data.startTime)/1000);
+	info.set("detail1_duration",(info.data.endTime-info.data.detail1Time)/1000);
+	delete info.data.startTime;
+	delete info.data.detail0Time;
+	delete info.data.detail1Time;
+	delete info.data.endTime;
+	info.update();
+	delete info.data.endTime;
+	__cb(__diff);
+}
 
 diff.show_sideBySide = (_diff)=>{
 	_diff = _diff.filter(e=>e.text.length>0);
@@ -245,7 +261,7 @@ info_status.set = (i)=>{
 			info_status.show();
 			break;
 		case -1:
-			info_status.el.textContent = "Ошибка сервера";
+			info_status.el.textContent = "Ошибка";
 			info_status.show();
 			enable_file_inputs();
 			break;
@@ -253,10 +269,6 @@ info_status.set = (i)=>{
 			info_status.el.textContent = "Загрузка...";
 			info_status.show();
 			disable_file_inputs();
-			break;
-		case 1:
-			info_status.el.textContent = "Рендер...";
-			info_status.show();
 			break;
 		case 2:
 			info_status.el.textContent = "Выполнено";

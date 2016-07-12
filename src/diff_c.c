@@ -8,8 +8,8 @@ extern "C" {
 		int type;
 	} __DIFF_INFO;
 
-	__DIFF_INFO** __diffString(const char* a, const char* b){
-		std::vector<DIFF_INFO*> diff = diffString(std::string(a),std::string(b));
+	__DIFF_INFO** __diffString(const char* a, const char* b, int detail){
+		std::vector<DIFF_INFO*> diff = diffString(std::string(a),std::string(b),detail);
 		int diff_size = diff.size();
 		__DIFF_INFO** nodejs_diff = new __DIFF_INFO*[diff_size+1];
 

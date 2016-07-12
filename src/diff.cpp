@@ -7,9 +7,9 @@
  * принимает две строки, внтури сплитает их на слова
  * И вызывает на них диффМейн
  */
-std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2){
-	auto words1 = splitString(text1);
-	auto words2 = splitString(text2);
+std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2, int detail){
+	auto words1 = splitString(text1, detail);
+	auto words2 = splitString(text2, detail);
 
 	auto diff = diffMain(words1, words2);
 	for(auto it = diff.begin()+1; it != diff.end();){
@@ -239,14 +239,21 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string>& text1, std::ve
 /**
  * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
  */
-std::vector<std::string> splitString(const std::string& str){
+std::vector<std::string> splitString(const std::string& str, int detail){
 	std::vector<std::string> tokens;
 	tokens.push_back("");
+	char delimiter;
+	if(detail>=1)
+		delimiter = ' ';
+	if(detail==0)
+		delimiter = '\n';
+
 	for(auto it = str.begin(); it != str.end(); it++){
 		tokens[tokens.size()-1]+=*it;
-		if(*it == ' ' || *it == '\n')
+		if(*it == delimiter)
 			tokens.push_back("");
 	}
+
 
 	return tokens;
 }

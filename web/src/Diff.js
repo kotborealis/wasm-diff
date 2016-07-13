@@ -1,24 +1,24 @@
 const DebugInfo = require("./DebugInfo");
-const StatusDebugInfo = require("./StatusInfo");
+const StatusInfo = require("./StatusInfo");
 const Controls = require("./Controls");
 const DiffComponents = require("./DiffComponents");
 
 const Diff = {};
 Diff.diffFiles = (files,callback)=>{
-    StatusDebugInfo.set(0);
+    StatusInfo.set(0);
     DebugInfo.set("startTime",(new Date).getTime());
     fetch("http://"+location.host+"/diff_0/",{
         method: 'post',
         body: files
     })
-    .catch(e=>StatusDebugInfo.set(-1))
+    .catch(e=>StatusInfo.set(-1))
     .then(e=>e.json())
     .then(callback);
 };
 
 Diff.diffString = (str1,str2,callback)=>{
     fetch("http://"+location.host+"/diff_1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
-    .catch(e=>StatusDebugInfo.set(-1))
+    .catch(e=>StatusInfo.set(-1))
     .then(e=>e.json())
     .then(callback);
 };
@@ -59,7 +59,7 @@ Diff.detail1 = (diff,callback)=>{
 };
 
 const detal1_done_helper = (diff,callback)=>{
-    StatusDebugInfo.set(2);
+    StatusInfo.set(2);
     DebugInfo.set("endTime",(new Date).getTime());
     DebugInfo.set("total_duration",(DebugInfo.data.endTime-DebugInfo.data.startTime)/1000);
     delete DebugInfo.data.startTime;

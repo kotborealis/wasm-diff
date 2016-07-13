@@ -1,0 +1,5 @@
+web/public/diff.js.map
+web/public/diff.js
+*.so
+*.dll
+web/node_modules

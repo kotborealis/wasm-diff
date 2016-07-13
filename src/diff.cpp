@@ -4,14 +4,19 @@
 
 /**
  * Обёртка над главной функцией для удобного вызова
- * принимает две строки, внтури сплитает их на слова
- * И вызывает на них диффМейн
+ * text1, text2 - строки, над которыми надо сделать дифф
+ * type - параметр, определяющий type
+ * 0 (default) - Построчный дифф
+ * 1 и больше - дифф по словам
  */
-std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2, int detail){
-	auto words1 = splitString(text1, detail);
-	auto words2 = splitString(text2, detail);
+std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2, int type){
+	auto words1 = splitString(text1, type); //Сплитаем тексты
+	auto words2 = splitString(text2, type);
 
-	auto diff = diffMain(words1, words2);
+	auto diff = diffMain(words1, words2); //Получаем дифф
+
+	//Объединяет между собой куски диффа с одинаковым типом
+	//Лайн-брейки при этом сохраняются
 	for(auto it = diff.begin()+1; it != diff.end();){
 		auto p = *(it-1);
 		auto c = *(it);
@@ -79,11 +84,13 @@ std::vector<DIFF_INFO*> diffMain(std::vector<std::string>& words1, std::vector<s
 std::vector<DIFF_INFO*> diffCompute(std::vector<std::string>& words1, std::vector<std::string>& words2){
 	std::vector<DIFF_INFO*> diff;
 
+	//Если первый текст пустой, второй текст добавился полностью
 	if(words1.size()==0){
 		for(auto it = words2.begin(); it != words2.end(); it++)
 			diff.push_back(new DIFF_INFO(*it,DIFF_INSERT));
 		return diff;
 	}
+	//Если второй текст пустой, первый текст полностью удалился
 	if(words2.size()==0){
 		for(auto it = words1.begin(); it != words1.end(); it++)
 			diff.push_back(new DIFF_INFO(*it,DIFF_REMOVE));
@@ -98,7 +105,7 @@ std::vector<DIFF_INFO*> diffCompute(std::vector<std::string>& words1, std::vecto
  * https://neil.fraser.name/software/diff_match_patch/svn/trunk/demos/demo_diff.html
  * http://code.google.com/p/google-diff-match-patch/
  * Привет копипаст
- * Скопированая и переделанная под дифф по словам функция из ссылок сверху
+ * Скопированая и переделанная функция из ссылок сверху
  *
  * Функция находит общую часть в середине двух массивов слов и делает дифф
  * по словам до и после этой части
@@ -219,7 +226,7 @@ std::vector<DIFF_INFO*> diffBisect(std::vector<std::string>& text1, std::vector<
  * Часть функции diffBissect
  * Принимает два массива слов и координаты общей части в них
  * Распилывает эти массивы по две части
- * И пускает их в диффМейн, рекурсия, жа.
+ * И пускает их в диффМейн, рекурсия
  */
 std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string>& text1, std::vector<std::string>& text2, int x, int y){
 	auto text1a = std::vector<std::string>(text1.begin(),text1.begin()+x);
@@ -237,7 +244,10 @@ std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string>& text1, std::ve
 }
 
 /**
- * Сплитает строку на слова, сохраняя разделители (прилепляются к концу слов)
+ * Сплитает строку, сохраняя разделители (прилепляются к концу слов)
+ * type - определяет разделитель
+ * 0 (default) - по \n
+ * 1 и больше - по ' '
  */
 std::vector<std::string> splitString(const std::string& str, int detail){
 	std::vector<std::string> tokens;
@@ -253,8 +263,6 @@ std::vector<std::string> splitString(const std::string& str, int detail){
 		if(*it == delimiter)
 			tokens.push_back("");
 	}
-
-
 	return tokens;
 }
 

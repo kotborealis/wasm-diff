@@ -1,1 +1,1 @@
-const Diff = require("./Diff");
+require("./Diff");

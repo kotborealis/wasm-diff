@@ -1,38 +1,25 @@
+/**
+ * Бинды и функции для формы выбора файлов и запуска сравнения
+ */
 const Controls = {};
 Controls.file1 = null;
 Controls.file2 = null;
+/**
+ * Функция, вызываемая в submit_form
+ * Должна быть задана из вне
+ * И принимать FileData как аргумент
+ */
 Controls.diff = ()=>{};
 
-Controls.invalidFileType = (file)=>
-    file.type.indexOf('text/')<0 && file.type.length!==0;
+Controls.handleFile1 = (event)=>
+    Controls.file1 = event.target.files[0];
 
-Controls.handleFile1 = (event)=>{
-    const file = event.target.files[0];
-    if(Controls.invalidFileType(file)){
-        info_status.set(-2);
-        file_input1.value = '';
-        return;
-    }
-    else
-        Controls.file1 = file;
-};
-
-Controls.handleFile2 = (event)=>{
-    const file = event.target.files[0];
-    if(Controls.invalidFileType(file)){
-        info_status.set(-2);
-        file_input2.value = '';
-        return;
-    }
-    else
-        Controls.file2 = file;
-};
+Controls.handleFile2 = (event)=>
+    Controls.file2 = event.target.files[0];
 
 Controls.submit_form = ()=>{
-    if(Controls.file1===null || Controls.file2===null){
-        info_status.set(-3);
+    if(Controls.file1===null || Controls.file2===null)
         return;
-    }
     const diffFiles = new FormData();
     diffFiles.append('diff_files[]',Controls.file1);
     diffFiles.append('diff_files[]',Controls.file2);

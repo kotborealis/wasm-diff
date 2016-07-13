@@ -1,8 +1,13 @@
 'use strict';
 
+/**
+ * Модуль, экспортирующий функцию
+ * Которая возвращает функцию Диффа из libvoiddiff
+ * Функция диффа принимает две строки и уровень точности (0 - по строкам, 1 - по словам)
+ */
 module.exports = function (){
 	const ffi = require('ffi');
-	const ref = require('ref')
+	const ref = require('ref');
 	const ArrayType = require('ref-array');
 	const Struct = require('ref-struct');
 
@@ -18,8 +23,9 @@ module.exports = function (){
 	});
 
 	return function(text1, text2, detail, callback){
-		const _ = libdiff.__diffString.async(text1,text2,detail,(err,res)=>{
-			if(err) throw err;
+		libdiff.__diffString.async(text1,text2,detail,(err,res)=>{
+			if(err)
+				throw err;
 			const _ = res;
 			_.length=1;
 			_.length = diff_info(_[0]).type+1;
@@ -33,4 +39,4 @@ module.exports = function (){
 			callback(diff);
 		});
 	}
-}
+};

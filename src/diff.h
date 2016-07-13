@@ -16,11 +16,11 @@ public:
     DIFF_TYPE type;
 };
 
-std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2, int detail = 0);
+std::vector<DIFF_INFO*> diffString(const std::string text1, const std::string text2, int type = 0);
 std::vector<DIFF_INFO*> diffMain(std::vector<std::string>& words1, std::vector<std::string>& words2);
 std::vector<DIFF_INFO*> diffCompute(std::vector<std::string>& words1, std::vector<std::string>& words2);
 std::vector<DIFF_INFO*> diffBisect(std::vector<std::string>& words1, std::vector<std::string>& words2);
 std::vector<DIFF_INFO*> diffBisectSplit(std::vector<std::string>& text1, std::vector<std::string>& text2, int x, int y);
-std::vector<std::string> splitString(const std::string& str, int detail);
+std::vector<std::string> splitString(const std::string& str, int type);
 int diff_commonPrefix(std::vector<std::string>& words1, std::vector<std::string>& words2);
 int diff_commonSuffix(std::vector<std::string>& words1, std::vector<std::string>& words2);

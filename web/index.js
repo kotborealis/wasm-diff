@@ -12,6 +12,9 @@ const upload = multer();
 app.use(cors());
 app.use(express.static('public'));
 
+/**
+ * Создаётся простой сервер с API
+ */
 app.get('/voiddiff/:detail/:line_a/:line_b',(req,res)=>{
     const detail = parseInt(req.params.detail);
     const text1 = req.params.line_a;

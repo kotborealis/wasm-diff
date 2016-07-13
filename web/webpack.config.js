@@ -1,4 +1,8 @@
 var path = require('path');
+/**
+ * Трансплиер кода из ES6 (ES2015) в более поддерживаемый стандарт
+ * Так же, позволяет использовать require в коде
+ */
 module.exports = {
     context: path.resolve("./src/"),
     entry: "./main.js",

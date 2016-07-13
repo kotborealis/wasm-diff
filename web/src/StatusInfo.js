@@ -1,3 +1,7 @@
+/**
+ * Инфа о статусе программы
+ * (Окошко, появляющееся при загрузке/ошибке
+ */
 const Controls = require("./Controls");
 const StatusInfo = {};
 
@@ -39,6 +43,6 @@ const Strings = {
     "error":"Ошибка",
     "loading":"Загрузка...",
     "done":"Выполнено"
-}
+};
 
 module.exports = StatusInfo;

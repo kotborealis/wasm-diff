@@ -1,3 +1,6 @@
+/**
+ * Окошко для дебаг-инфы и интересных статов
+ */
 const DebugInfo = {};
 DebugInfo.visible = false;
 DebugInfo.data = {};
@@ -14,12 +17,12 @@ DebugInfo.update = ()=>
 DebugInfo.show = ()=>{
     DebugInfo.el.classList.remove('c-tooltip--hide');
     DebugInfo.visible = true;
-}
+};
 
 DebugInfo.hide = ()=>{
     DebugInfo.el.classList.add('c-tooltip--hide');
     DebugInfo.visible = false;
-}
+};
 
 DebugInfo.toggle = ()=>
     DebugInfo.visible ? DebugInfo.hide() : DebugInfo.show();

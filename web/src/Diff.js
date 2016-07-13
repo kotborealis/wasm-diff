@@ -61,7 +61,10 @@ Diff.splitDiffByLines = (diff, callback)=>{
                             _data[last][0].type === -buff[0].type;
 
         if(replaced)
-            _data[last].push(buff[0]);
+            if(_data[last][0].type === -1)
+                _data[last] = [_data[last][0],buff[0]];
+            else
+                _data[last] = [buff[0],_data[last][0]];
         else
             _data.push(buff);
         buff=[];

@@ -48,28 +48,20 @@ Diff.diffString = (str1,str2,type,callback)=>{
  */
 Diff.splitDiffByLines = (diff, callback)=>{
     DebugInfo.set('nodes_detail0',diff.length);
-    const _data = [];
-    let buff=[];
-    diff.forEach(e=>{
-        buff.push(e);
-        const last = _data.length-1;
-        //Проверка на то, что строка была заменена
-        const replaced =    _data[last] !== undefined &&
-                            _data[last].length === 1 &&
-                            buff.length === 1 &&
-                            buff[0].type !== 0 &&
-                            _data[last][0].type === -buff[0].type;
-
-        if(replaced)
-            if(_data[last][0].type === -1)
-                _data[last] = [_data[last][0],buff[0]];
+    const data = [];
+    diff.forEach(diff_info=>{
+        const last = data.length-1;
+        //Если предыдущая строка содержит один элемент, была изменена и имеет противоположный дифф-инфо тип
+        //То текущий дифф-инфо является частью предыдущей строки
+        if(data[last] && data[last].length===1 && data[last][0].type !== 0 && data[last][0].type === -diff_info.type)
+            if(data[last][0].type === -1)
+                data[last] = [data[last][0],diff_info];
             else
-                _data[last] = [buff[0],_data[last][0]];
+                data[last] = [diff_info,data[last][0]];
         else
-            _data.push(buff);
-        buff=[];
+            data.push([diff_info]);
     });
-    callback(_data);
+    callback(data);
 };
 
 /**
@@ -82,7 +74,7 @@ Diff.diffLinesPrecise = (diff_lines, callback)=>{
     let counter = 0;
     for(let i=0;i<diff_lines.length;i++){
         //Для каждой изменённой строки диффа будет выполнен отдельный запрос к серверу с типом диффа 1 (по словам)
-        if(diff_lines[i].length>=2)
+        if(diff_lines[i].length==2)
             Diff.diffString(diff_lines[i][0].text,diff_lines[i][1].text,1,(e)=>{
                 nodes_detail1 += e.length;
                 diff_lines[i] = e;

@@ -12,21 +12,20 @@ DebugInfo.update = ()=>
     DebugInfo.el.textContent = JSON.stringify(DebugInfo.data,null,' ');
 
 DebugInfo.show = ()=>{
-    DebugInfo.el.classList.remove('tooltip__hide');
+    DebugInfo.el.classList.remove('c-tooltip--hide');
     DebugInfo.visible = true;
 }
 
 DebugInfo.hide = ()=>{
-    DebugInfo.el.classList.add('tooltip__hide');
+    DebugInfo.el.classList.add('c-tooltip--hide');
     DebugInfo.visible = false;
 }
 
-DebugInfo.toggle = ()=>{
+DebugInfo.toggle = ()=>
     DebugInfo.visible ? DebugInfo.hide() : DebugInfo.show();
-};
 
-document.body.addEventListener('keypress',(e)=>{
-    if(e.keyCode===105)
+window.document.body.addEventListener('keypress',(e)=>{
+    if(e.code==="KeyI")
         DebugInfo.toggle();
 });
 

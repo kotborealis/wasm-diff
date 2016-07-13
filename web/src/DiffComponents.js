@@ -16,17 +16,19 @@ Components.info  = (text,class_) =>{
 Components.line = (elements_a,elements_b,class_a,class_b) =>{
     //Левая часть строки диффа
     const el = document.createElement('span');
-    el.className = "c-diff__text-line c-diff__text-line--left "+class_a;
     elements_a.forEach(e=>el.appendChild(e));
-    if(el.textContent==='')//Если строка пустая, меняем её на многоточие
-        el.innerHTML = "<span class='c-shadow-symbol'>…</span>\n";
+    if(el.textContent==='')
+        el.className = "c-diff__text-line c-diff__text-line--right c-diff__text-line--empty";
+    else
+        el.className = "c-diff__text-line c-diff__text-line--right "+class_a;
 
     //Правая часть
     const er = document.createElement('span');
-    er.className = "c-diff__text-line c-diff__text-line--right "+class_b;
     elements_b.forEach(e=>er.appendChild(e));
     if(er.textContent==='')
-        er.innerHTML = "<span class='c-shadow-symbol'>…</span>\n";
+        er.className = "c-diff__text-line c-diff__text-line--right c-diff__text-line--empty";
+    else
+        er.className = "c-diff__text-line c-diff__text-line--right "+class_b;
 
     //Строка диффа
     const cnt = document.createElement('span');

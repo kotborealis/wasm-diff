@@ -48,6 +48,9 @@ body{
 .c-diff__info--remove{
 	background: rgba(218,173,173,0.6);
 }
+.c-diff__text-line--empty{
+	background: rgba(219,219,219,0.5);
+}
 .c-diff__text-line--new{
 	background: rgba(166,243,166,0.5);
 }
@@ -67,7 +70,7 @@ body{
 	font-family: monospace;
 	white-space: pre-wrap;
 	background-color: #efefef;
-	box-shadow: 0 0 10px rgba(0,0,0,0.8);	
+	box-shadow: 0 0 10px rgba(0,0,0,0.8);
 	position: absolute;
 	z-index:20;
 	display: block;

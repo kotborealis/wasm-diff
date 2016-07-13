@@ -5,7 +5,7 @@ Components.info  = (text,class_) =>{
         class_='';
 
     const e = document.createElement('span');
-    e.innerHTML = text.replace(/\r?\n/g,"<span class='shadow__symbol'>↵</span>\n");
+    e.innerHTML = text.replace(/\r?\n/g,"<span class='c-shadow-symbol'>↵</span>\n");
     e.className = "c-diff__info "+class_;
     return e;
 };
@@ -15,13 +15,13 @@ Components.line = (elements_a,elements_b,class_a,class_b) =>{
     el.className = "c-diff__text-line c-diff__text-line--left "+class_a;
     elements_a.forEach(e=>el.appendChild(e));
     if(el.textContent==='')
-        el.innerHTML = "<span class='shadow__symbol'>...</span>\n";
+        el.innerHTML = "<span class='c-shadow-symbol'>...</span>\n";
 
     const er = document.createElement('span');
     er.className = "c-diff__text-line c-diff__text-line--right "+class_b;
     elements_b.forEach(e=>er.appendChild(e));
     if(er.textContent==='')
-        er.innerHTML = "<span class='shadow__symbol'>...</span>\n";
+        er.innerHTML = "<span class='c-shadow-symbol'>...</span>\n";
 
     const cnt = document.createElement('span');
     cnt.className = "c-diff__diff-line";

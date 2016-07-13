@@ -26,6 +26,7 @@ Diff.diffString = (str1,str2,callback)=>{
 };
 
 Diff.splitDiff = (data,callback)=>{
+    DebugInfo.set('nodes_detail0',data.length);
     const _data = [];
     let buff=[];
     data.forEach(e=>{
@@ -47,16 +48,25 @@ Diff.splitDiff = (data,callback)=>{
 };
 
 Diff.detail1 = (diff,callback)=>{
+    let nodes_detail1 = 0;
     let counter = 0;
     for(let i=0;i<diff.length;i++){
         if(diff[i].length>=2)
             Diff.diffString(diff[i][0].text,diff[i][1].text,(e)=>{
+                nodes_detail1 += e.length;
                 diff[i] = e;
-                if(++counter===diff.length)
+                if(++counter===diff.length){
+                    DebugInfo.set('nodes_detail1',nodes_detail1);
                     detal1_done_helper(diff,callback);
+                }
             });
-        else if(++counter===diff.length)
-            detal1_done_helper(diff,callback);
+        else {
+            nodes_detail1++;
+            if(++counter===diff.length){
+                DebugInfo.set('nodes_detail1',nodes_detail1);
+                detal1_done_helper(diff,callback);
+            }
+        }
     }
 };
 
@@ -71,6 +81,10 @@ const detal1_done_helper = (diff,callback)=>{
 };
 
 Diff.render = (diff)=>{
+    const stats = {};
+    stats.nodes_equal = 0;
+    stats.nodes_insert = 0;
+    stats.nodes_remove = 0;
     diff = diff.filter(e=>e.text.length>0);
     const buff = [];
     const diff_container = document.getElementsByClassName("js-diff-container")[0];
@@ -87,15 +101,18 @@ Diff.render = (diff)=>{
 
                 switch(type){
                     case 0:
-                        line_left.push(DiffComponents.info(text));
+                        stats.nodes_equal++;
+                        line_left.push(DiffComponents.info(text,'c-diff__info--equal'));
                         line_right.push(DiffComponents.info(text));
                         break;
                     case 1:
                         changed=true;
+                        stats.nodes_insert++;
                         line_right.push(DiffComponents.info(text,'c-diff__info--insert'));
                         break;
                     case -1:
                         changed=true;
+                        stats.nodes_remove++;
                         line_left.push(DiffComponents.info(text,'c-diff__info--remove'));
                         break;
                 }
@@ -107,6 +124,9 @@ Diff.render = (diff)=>{
 
             diff_container.appendChild(_);
         });
+        DebugInfo.set('nodes_equal',stats.nodes_equal);
+        DebugInfo.set('nodes_insert',stats.nodes_insert);
+        DebugInfo.set('nodes_remove',stats.nodes_remove);
     });
 };
 

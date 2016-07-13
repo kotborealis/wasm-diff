@@ -3,11 +3,13 @@ const StatusInfo = require("./StatusInfo");
 const Controls = require("./Controls");
 const DiffComponents = require("./DiffComponents");
 
+const api_url = "/voiddiff/";
+
 const Diff = {};
 Diff.diffFiles = (files,callback)=>{
     StatusInfo.set(0);
     DebugInfo.set("startTime",(new Date).getTime());
-    fetch("http://"+location.host+"/diff_0/",{
+    fetch("http://"+location.host+api_url+"0/",{
         method: 'post',
         body: files
     })
@@ -17,7 +19,7 @@ Diff.diffFiles = (files,callback)=>{
 };
 
 Diff.diffString = (str1,str2,callback)=>{
-    fetch("http://"+location.host+"/diff_1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
+    fetch("http://"+location.host+api_url+"1/"+encodeURIComponent(str1)+"/"+encodeURIComponent(str2))
     .catch(e=>StatusInfo.set(-1))
     .then(e=>e.json())
     .then(callback);

@@ -5,13 +5,13 @@
 	<link type="text/css" rel="stylesheet" href="/style.css" media="screen">
 </head>
 <body>
-	<div id="info" class="tooltip tooltip__hide fixed"></div>
-	<div id="info_status" class="tooltip tooltip__hide fixed tooltip__info"></div>
+	<div id="debug-info" class="tooltip tooltip__hide fixed"></div>
+	<div id="info-status" class="tooltip tooltip__hide fixed tooltip__info"></div>
 	<div id="tooltip" class="tooltip tooltip__hide"></div>
     <div class="controls">
-        <input type="file" id="file1" name="file1" accesskey="q"/>
-        <input type="file" id="file2" name="file2" accesskey="w"/>
-        <input type="button" id="file_submit_button" value="Сравнить" accesskey="a"/>
+        <input type="file" class="file-input" name="file1" accesskey="q"/>
+        <input type="file" class="file-input" name="file2" accesskey="w"/>
+        <input type="button" class="file-submit" value="Сравнить" accesskey="a"/>
     </div>
 	<pre class="diff"></pre>
 </body>

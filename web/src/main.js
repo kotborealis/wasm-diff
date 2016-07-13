@@ -184,9 +184,9 @@ const submit_form = ()=>{
 	diffFiles.append('diff_files[]',diffFile2);
 	diff.diffFiles(diffFiles);
 }
-const file_input1 = document.getElementById("file1");
-const file_input2 = document.getElementById("file2");
-const file_submit_button = document.getElementById("file_submit_button");
+const file_input1 = document.getElementsByClassName("file-input")[0];
+const file_input2 = document.getElementsByClassName("file-input")[1];
+const file_submit_button = document.getElementsByClassName("file-submit")[0];
 
 const disable_file_inputs = ()=>{
 	file_input1.disabled = true;
@@ -229,7 +229,7 @@ tooltip.hide = ()=>{
 const info = {};
 info.visible = false;
 info.data = {};
-info.el = document.getElementById("info");
+info.el = document.getElementById("debug-info");
 info.el.style.left = 100+"px";
 info.el.style.top = 100+"px";
 info.set = (n,i)=>{
@@ -260,7 +260,7 @@ document.body.addEventListener('keypress',(e)=>{
 
 /*info status*/
 const info_status = {};
-info_status.el = document.getElementById("info_status");
+info_status.el = document.getElementById("info-status");
 info_status.set = (i)=>{
 	switch(i){
 		case -2:

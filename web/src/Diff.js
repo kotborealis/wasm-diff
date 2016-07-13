@@ -71,7 +71,7 @@ const detal1_done_helper = (diff,callback)=>{
 Diff.render = (diff)=>{
     diff = diff.filter(e=>e.text.length>0);
     const buff = [];
-    const diff_container = document.getElementsByClassName("diff")[0];
+    const diff_container = document.getElementsByClassName("js-diff-container")[0];
     diff_container.innerHTML='';
 
     Diff.splitDiff(diff,(diff_lines)=>{
@@ -85,22 +85,22 @@ Diff.render = (diff)=>{
 
                 switch(type){
                     case 0:
-                        line_left.push(DiffComponents.info(text,''));
-                        line_right.push(DiffComponents.info(text,''));
+                        line_left.push(DiffComponents.info(text));
+                        line_right.push(DiffComponents.info(text));
                         break;
                     case 1:
                         changed=true;
-                        line_right.push(DiffComponents.info(text,'diff__insert'));
+                        line_right.push(DiffComponents.info(text,'c-diff__info--insert'));
                         break;
                     case -1:
                         changed=true;
-                        line_left.push(DiffComponents.info(text,'diff__remove'));
+                        line_left.push(DiffComponents.info(text,'c-diff__info--remove'));
                         break;
                 }
             });
 
-            const type_left = changed?'diff__old':'';
-            const type_right = changed?'diff__new':'';
+            const type_left = changed?'c-diff__text-line--old':'';
+            const type_right = changed?'c-diff__text-line--new':'';
             const _ = DiffComponents.line(line_left,line_right,type_left,type_right);
 
             diff_container.appendChild(_);

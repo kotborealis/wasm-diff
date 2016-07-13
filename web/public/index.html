@@ -1,19 +1,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Diff</title>
+	<title>VoidDiff</title>
 	<link type="text/css" rel="stylesheet" href="/style.css" media="screen">
 </head>
 <body>
-	<div id="debug-info" class="tooltip tooltip__hide fixed"></div>
-	<div id="info-status" class="tooltip tooltip__hide fixed tooltip__info"></div>
-	<div id="tooltip" class="tooltip tooltip__hide"></div>
-    <div class="controls">
-        <input type="file" class="file-input" name="file1" accesskey="q"/>
-        <input type="file" class="file-input" name="file2" accesskey="w"/>
-        <input type="button" class="file-submit" value="Сравнить" accesskey="a"/>
+	<div id="debug-info" class="c-tooltip c-tooltip--hide h-fixed"></div>
+	<div id="info-status" class="c-tooltip c-tooltip-info c-tooltip--hide h-fixed"></div>
+    <div class="c-controls">
+        <input type="file" class="js-file-input" name="file1" accesskey="q"/>
+        <input type="file" class="js-file-input" name="file2" accesskey="w"/>
+        <input type="button" class="js-file-submit" value="Сравнить" accesskey="a"/>
     </div>
-	<pre class="diff"></pre>
+	<pre class="c-diff js-diff-container"></pre>
 </body>
 <script type="text/javascript" src="/diff.js"></script>
 </html>

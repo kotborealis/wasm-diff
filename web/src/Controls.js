@@ -39,9 +39,9 @@ Controls.submit_form = ()=>{
     Controls.diff(diffFiles);
 };
 
-Controls.file_input1 = document.getElementsByClassName("file-input")[0];
-Controls.file_input2 = document.getElementsByClassName("file-input")[1];
-Controls.file_submit = document.getElementsByClassName("file-submit")[0];
+Controls.file_input1 = document.getElementsByClassName("js-file-input")[0];
+Controls.file_input2 = document.getElementsByClassName("js-file-input")[1];
+Controls.file_submit = document.getElementsByClassName("js-file-submit")[0];
 
 Controls.disable = ()=>{
     Controls.file_input1.disabled = true;

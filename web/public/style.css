@@ -3,23 +3,14 @@ html,body{
 	padding:0;
 }
 
-.controls{
+.c-controls{
 	margin:10px;
 	background-color: #efefef;
 	padding:10px;
-}
-.controls .file_input, .controls .checkbox_input{
 	display: inline-block;
 }
-.controls .file_input{
-	
-}
-.controls .checkbox_input{
-	
-}
 
-/* Diff */
-.diff{
+.c-diff{
 	margin:5px;
 	background-color: #efefef;
 	font-family: monospace;
@@ -28,46 +19,50 @@ html,body{
 	border: 1px dotted #afafaf;
 	padding:5px;
 }
-.diff__line{
+
+.c-diff__diff-line{
 	display:flex;
+	transition: background-color 0.3s ease;
 }
-.diff__line-left, .diff__line-right{
+
+.c-diff__text-line{
 	white-space: pre-wrap;
 	width:50%;
 	max-width:50%;
 }
-.diff__line-left{
+
+.c-diff__text-line--left{
 	float:left;
 }
-.diff__line-right{
+.c-diff__text-line--right{
 	float:right;
 }
-.diff__equal{}
-.diff__insert{
+
+.c-diff-info{
+	
+}
+.c-diff__info--insert{
 	background: rgba(139,201,139,0.6);
 }
-.diff__remove{
+.c-diff__info--remove{
 	background: rgba(218,173,173,0.6);
 }
-.diff__new{
+.c-diff__text-line--new{
 	background: rgba(166,243,166,0.5);
 }
-.diff__old{
+.c-diff__text-line--old{
 	background: rgba(248,203,203,0.5);
 }
-.diff__hover{
+.c-diff__text-line--hover{
 	background: rgba(130,130,130,0.5);
 }
-.diff__line{
-	transition: background-color 0.3s ease;
-}
-.shadow__symbol{
+.c-shadow-symbol{
 	color:rgba(120,120,120,0.8);
 	font-size:90%;
 }
 
 /* Tooltip */
-.tooltip{
+.c-tooltip{
 	max-width:45%;
 	font-family: monospace;
 	white-space: pre-wrap;
@@ -82,10 +77,10 @@ html,body{
 	margin-left: 4px;
 	margin-top: 4px;
 }
-.tooltip__hide{
+.c-tooltip--hide{
 	display:none!important;
 }
-.tooltip__info {
+.c-tooltip-info {
     padding: 10px 20px 10px 20px;
     text-align: center;
     width: 100px;
@@ -93,7 +88,6 @@ html,body{
     left:25px;
 }
 
-/* helper styles */
-.fixed{
+.h-fixed{
 	position:fixed;
 }

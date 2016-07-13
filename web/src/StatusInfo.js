@@ -30,9 +30,9 @@ StatusInfo.set = (i)=>{
 };
 
 StatusInfo.show = ()=>
-    StatusInfo.el.classList.remove('tooltip__hide');
+    StatusInfo.el.classList.remove('c-tooltip--hide');
 StatusInfo.hide = ()=>
-    StatusInfo.el.classList.add('tooltip__hide');
+    StatusInfo.el.classList.add('c-tooltip--hide');
 
 const Strings = {
     "badType":"Неверный формат файла",

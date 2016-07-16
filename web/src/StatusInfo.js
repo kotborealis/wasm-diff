@@ -39,10 +39,10 @@ StatusInfo.hide = ()=>
     StatusInfo.el.classList.add('c-tooltip--hide');
 
 const Strings = {
-    "badType":"Неверный формат файла",
-    "error":"Ошибка",
-    "loading":"Загрузка...",
-    "done":"Выполнено"
+    "badType":"Wrong File Format",
+    "error":"Error",
+    "loading":"Loading...",
+    "done":"Done"
 };
 
 module.exports = StatusInfo;
